@@ -17,26 +17,20 @@
 package de.j4velin.pedometer;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.j4velin.pedometer.ui.ActivityMain;
 import de.j4velin.pedometer.util.Logger;
-import de.j4velin.pedometer.util.Util;
-import de.j4velin.pedometer.widget.WidgetUpdateService;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -47,14 +41,10 @@ import de.j4velin.pedometer.widget.WidgetUpdateService;
  */
 public class PedometerManager extends Service implements SensorEventListener {
 
-    private final static int NOTIFICATION_ID = 1;
-
     public final static String ACTION_PAUSE = "pause";
+    public final static int MICROSECONDS_IN_ONE_SECOND = 1000000;
 
-    private static boolean WAIT_FOR_VALID_STEPS = false;
-    private static int steps;
-
-    private final static int MICROSECONDS_IN_ONE_MINUTE = 60000000;
+    public static List<Integer> steps = new ArrayList<>(10000);
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
@@ -66,30 +56,14 @@ public class PedometerManager extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(final SensorEvent event) {
         if (event.values[0] > Integer.MAX_VALUE) {
-            if (BuildConfig.DEBUG) Logger.log("probably not a real value: " + event.values[0]);
-            return;
-        } else {
-            steps = (int) event.values[0];
-            if (WAIT_FOR_VALID_STEPS && steps > 0) {
-                WAIT_FOR_VALID_STEPS = false;
-                DatabaseManager db = DatabaseManager.getInstance(this);
-                if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
-                    int pauseDifference = steps -
-                            getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS)
-                                    .getInt("pauseCount", steps);
-                    db.insertNewDay(Util.getToday(), steps - pauseDifference);
-                    if (pauseDifference > 0) {
-                        // update pauseCount for the new day
-                        getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS).edit()
-                                .putInt("pauseCount", steps).commit();
-                    }
-                    reRegisterSensor();
-                }
-                db.saveCurrentSteps(steps);
-                db.close();
-                updateNotificationState();
-                startService(new Intent(this, WidgetUpdateService.class));
+            if (BuildConfig.DEBUG) {
+                Logger.log("probably not a real value: " + event.values[0]);
             }
+        } else {
+            if (BuildConfig.DEBUG) {
+                Logger.log("adding to steps array: " + (int) event.values[0]);
+            }
+            steps.add((int) event.values[0]);
         }
     }
 
@@ -100,46 +74,16 @@ public class PedometerManager extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        if (intent != null && ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
+        if (intent == null || ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+        else {
             if (BuildConfig.DEBUG)
                 Logger.log("onStartCommand action: " + intent.getStringExtra("action"));
-            if (steps == 0) {
-                DatabaseManager db = DatabaseManager.getInstance(this);
-                steps = db.getCurrentSteps();
-                db.close();
-            }
-            SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
-            if (prefs.contains("pauseCount")) { // resume counting
-                int difference = steps -
-                        prefs.getInt("pauseCount", steps); // number of steps taken during the pause
-                DatabaseManager db = DatabaseManager.getInstance(this);
-                db.updateSteps(Util.getToday(), -difference);
-                db.close();
-                prefs.edit().remove("pauseCount").commit();
-                updateNotificationState();
-            } else { // pause counting
-                // cancel restart
-                ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
-                        .cancel(PendingIntent.getService(getApplicationContext(), 2,
-                                new Intent(this, PedometerManager.class),
-                                PendingIntent.FLAG_UPDATE_CURRENT));
-                prefs.edit().putInt("pauseCount", steps).commit();
-                updateNotificationState();
-                stopSelf();
-                return START_NOT_STICKY;
-            }
+            // May be Sticky in the future
+            return START_NOT_STICKY;
         }
-
-        // restart service every hour to get the current step count
-        ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
-                .set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR,
-                        PendingIntent.getService(getApplicationContext(), 2,
-                                new Intent(this, PedometerManager.class),
-                                PendingIntent.FLAG_UPDATE_CURRENT));
-
-        WAIT_FOR_VALID_STEPS = true;
-
-        return START_STICKY;
     }
 
     @Override
@@ -147,7 +91,6 @@ public class PedometerManager extends Service implements SensorEventListener {
         super.onCreate();
         if (BuildConfig.DEBUG) Logger.log("PedometerManager onCreate");
         reRegisterSensor();
-        updateNotificationState();
     }
 
     @Override
@@ -173,50 +116,6 @@ public class PedometerManager extends Service implements SensorEventListener {
         }
     }
 
-    private void updateNotificationState() {
-        if (BuildConfig.DEBUG) Logger.log("PedometerManager updateNotificationState");
-        SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
-        NotificationManager nm =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (prefs.getBoolean("notification", true)) {
-            int goal = prefs.getInt("goal", 10000);
-            DatabaseManager db = DatabaseManager.getInstance(this);
-            int today_offset = db.getSteps(Util.getToday());
-            if (steps == 0)
-                steps = db.getCurrentSteps(); // use saved value if we haven't anything better
-            db.close();
-            Notification.Builder notificationBuilder = new Notification.Builder(this);
-            if (steps > 0) {
-                if (today_offset == Integer.MIN_VALUE) today_offset = -steps;
-                notificationBuilder.setProgress(goal, today_offset + steps, false).setContentText(
-                        today_offset + steps >= goal ? getString(R.string.goal_reached_notification,
-                                NumberFormat.getInstance(Locale.getDefault())
-                                        .format((today_offset + steps))) :
-                                getString(R.string.notification_text,
-                                        NumberFormat.getInstance(Locale.getDefault())
-                                                .format((goal - today_offset - steps))));
-            } else { // still no step value?
-                notificationBuilder
-                        .setContentText(getString(R.string.your_progress_will_be_shown_here_soon));
-            }
-            boolean isPaused = prefs.contains("pauseCount");
-            notificationBuilder.setPriority(Notification.PRIORITY_MIN).setShowWhen(false)
-                    .setContentTitle(isPaused ? getString(R.string.ispaused) :
-                            getString(R.string.notification_title)).setContentIntent(PendingIntent
-                    .getActivity(this, 0, new Intent(this, ActivityMain.class),
-                            PendingIntent.FLAG_UPDATE_CURRENT))
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .addAction(isPaused ? R.drawable.ic_resume : R.drawable.ic_pause,
-                            isPaused ? getString(R.string.resume) : getString(R.string.pause),
-                            PendingIntent.getService(this, 4, new Intent(this, PedometerManager.class)
-                                            .putExtra("action", ACTION_PAUSE),
-                                    PendingIntent.FLAG_UPDATE_CURRENT)).setOngoing(true);
-            nm.notify(NOTIFICATION_ID, notificationBuilder.build());
-        } else {
-            nm.cancel(NOTIFICATION_ID);
-        }
-    }
-
     private void reRegisterSensor() {
         if (BuildConfig.DEBUG) Logger.log("re-register sensor listener");
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -233,8 +132,8 @@ public class PedometerManager extends Service implements SensorEventListener {
             Logger.log("default: " + sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER).getName());
         }
 
-        // enable batching with delay of max 5 min
+        // enable batching with delay of max 2 seconds
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
-                SensorManager.SENSOR_DELAY_NORMAL, 5 * MICROSECONDS_IN_ONE_MINUTE);
+                SensorManager.SENSOR_DELAY_NORMAL, MICROSECONDS_IN_ONE_SECOND);
     }
 }
