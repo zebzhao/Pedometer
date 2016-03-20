@@ -23,7 +23,7 @@ import android.content.SharedPreferences;
 import java.util.TimeZone;
 
 import de.j4velin.pedometer.BuildConfig;
-import de.j4velin.pedometer.Database;
+import de.j4velin.pedometer.DatabaseManager;
 
 /**
  * Class to look for changes in the timezone setting and to adjust the database on a change
@@ -42,7 +42,7 @@ public class TimeZoneListener extends BroadcastReceiver {
                     oldTimeZone.getRawOffset());
             Logger.log("Today: " + Util.getToday());
         }
-        Database db = Database.getInstance(context);
+        DatabaseManager db = DatabaseManager.getInstance(context);
         db.timeZoneChanged(newTimeZone.getRawOffset() - oldTimeZone.getRawOffset());
         db.close();
         prefs.edit().putString("timezone", intent.getStringExtra("time-zone")).commit();

@@ -33,7 +33,7 @@ import android.os.IBinder;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import de.j4velin.pedometer.ui.Activity_Main;
+import de.j4velin.pedometer.ui.ActivityMain;
 import de.j4velin.pedometer.util.Logger;
 import de.j4velin.pedometer.util.Util;
 import de.j4velin.pedometer.widget.WidgetUpdateService;
@@ -45,7 +45,7 @@ import de.j4velin.pedometer.widget.WidgetUpdateService;
  * This service won't be needed any more if there is a way to read the
  * step-value without waiting for a sensor event
  */
-public class SensorListener extends Service implements SensorEventListener {
+public class PedometerManager extends Service implements SensorEventListener {
 
     private final static int NOTIFICATION_ID = 1;
 
@@ -72,7 +72,7 @@ public class SensorListener extends Service implements SensorEventListener {
             steps = (int) event.values[0];
             if (WAIT_FOR_VALID_STEPS && steps > 0) {
                 WAIT_FOR_VALID_STEPS = false;
-                Database db = Database.getInstance(this);
+                DatabaseManager db = DatabaseManager.getInstance(this);
                 if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
                     int pauseDifference = steps -
                             getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS)
@@ -104,7 +104,7 @@ public class SensorListener extends Service implements SensorEventListener {
             if (BuildConfig.DEBUG)
                 Logger.log("onStartCommand action: " + intent.getStringExtra("action"));
             if (steps == 0) {
-                Database db = Database.getInstance(this);
+                DatabaseManager db = DatabaseManager.getInstance(this);
                 steps = db.getCurrentSteps();
                 db.close();
             }
@@ -112,7 +112,7 @@ public class SensorListener extends Service implements SensorEventListener {
             if (prefs.contains("pauseCount")) { // resume counting
                 int difference = steps -
                         prefs.getInt("pauseCount", steps); // number of steps taken during the pause
-                Database db = Database.getInstance(this);
+                DatabaseManager db = DatabaseManager.getInstance(this);
                 db.updateSteps(Util.getToday(), -difference);
                 db.close();
                 prefs.edit().remove("pauseCount").commit();
@@ -121,7 +121,7 @@ public class SensorListener extends Service implements SensorEventListener {
                 // cancel restart
                 ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
                         .cancel(PendingIntent.getService(getApplicationContext(), 2,
-                                new Intent(this, SensorListener.class),
+                                new Intent(this, PedometerManager.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
                 prefs.edit().putInt("pauseCount", steps).commit();
                 updateNotificationState();
@@ -134,7 +134,7 @@ public class SensorListener extends Service implements SensorEventListener {
         ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
                 .set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR,
                         PendingIntent.getService(getApplicationContext(), 2,
-                                new Intent(this, SensorListener.class),
+                                new Intent(this, PedometerManager.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
 
         WAIT_FOR_VALID_STEPS = true;
@@ -145,7 +145,7 @@ public class SensorListener extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (BuildConfig.DEBUG) Logger.log("SensorListener onCreate");
+        if (BuildConfig.DEBUG) Logger.log("PedometerManager onCreate");
         reRegisterSensor();
         updateNotificationState();
     }
@@ -157,13 +157,13 @@ public class SensorListener extends Service implements SensorEventListener {
         // Restart service in 500 ms
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE))
                 .set(AlarmManager.RTC, System.currentTimeMillis() + 500, PendingIntent
-                        .getService(this, 3, new Intent(this, SensorListener.class), 0));
+                        .getService(this, 3, new Intent(this, PedometerManager.class), 0));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (BuildConfig.DEBUG) Logger.log("SensorListener onDestroy");
+        if (BuildConfig.DEBUG) Logger.log("PedometerManager onDestroy");
         try {
             SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
             sm.unregisterListener(this);
@@ -174,13 +174,13 @@ public class SensorListener extends Service implements SensorEventListener {
     }
 
     private void updateNotificationState() {
-        if (BuildConfig.DEBUG) Logger.log("SensorListener updateNotificationState");
+        if (BuildConfig.DEBUG) Logger.log("PedometerManager updateNotificationState");
         SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
         NotificationManager nm =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (prefs.getBoolean("notification", true)) {
             int goal = prefs.getInt("goal", 10000);
-            Database db = Database.getInstance(this);
+            DatabaseManager db = DatabaseManager.getInstance(this);
             int today_offset = db.getSteps(Util.getToday());
             if (steps == 0)
                 steps = db.getCurrentSteps(); // use saved value if we haven't anything better
@@ -203,12 +203,12 @@ public class SensorListener extends Service implements SensorEventListener {
             notificationBuilder.setPriority(Notification.PRIORITY_MIN).setShowWhen(false)
                     .setContentTitle(isPaused ? getString(R.string.ispaused) :
                             getString(R.string.notification_title)).setContentIntent(PendingIntent
-                    .getActivity(this, 0, new Intent(this, Activity_Main.class),
+                    .getActivity(this, 0, new Intent(this, ActivityMain.class),
                             PendingIntent.FLAG_UPDATE_CURRENT))
                     .setSmallIcon(R.drawable.ic_notification)
                     .addAction(isPaused ? R.drawable.ic_resume : R.drawable.ic_pause,
                             isPaused ? getString(R.string.resume) : getString(R.string.pause),
-                            PendingIntent.getService(this, 4, new Intent(this, SensorListener.class)
+                            PendingIntent.getService(this, 4, new Intent(this, PedometerManager.class)
                                             .putExtra("action", ACTION_PAUSE),
                                     PendingIntent.FLAG_UPDATE_CURRENT)).setOngoing(true);
             nm.notify(NOTIFICATION_ID, notificationBuilder.build());

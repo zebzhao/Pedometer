@@ -29,21 +29,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.j4velin.pedometer.util.Logger;
 import de.j4velin.pedometer.util.Util;
 
-public class Database extends SQLiteOpenHelper {
+public class DatabaseManager extends SQLiteOpenHelper {
 
     private final static String DB_NAME = "steps";
     private final static int DB_VERSION = 2;
 
-    private static Database instance;
+    private static DatabaseManager instance;
     private static final AtomicInteger openCounter = new AtomicInteger();
 
-    private Database(final Context context) {
+    private DatabaseManager(final Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    public static synchronized Database getInstance(final Context c) {
+    public static synchronized DatabaseManager getInstance(final Context c) {
         if (instance == null) {
-            instance = new Database(c.getApplicationContext());
+            instance = new DatabaseManager(c.getApplicationContext());
         }
         openCounter.incrementAndGet();
         return instance;

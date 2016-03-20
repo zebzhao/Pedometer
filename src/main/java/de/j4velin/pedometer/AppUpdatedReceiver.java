@@ -27,7 +27,7 @@ public class AppUpdatedReceiver extends BroadcastReceiver {
 	public void onReceive(final Context context, final Intent intent) {
 		if (BuildConfig.DEBUG)
 			Logger.log("app updated");
-		context.startService(new Intent(context, SensorListener.class));		
+		context.startService(new Intent(context, PedometerManager.class));
 	}
 
 }

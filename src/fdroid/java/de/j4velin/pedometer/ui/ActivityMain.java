@@ -32,18 +32,18 @@ import android.widget.TextView;
 
 import java.util.TimeZone;
 
+import de.j4velin.pedometer.PedometerManager;
 import de.j4velin.pedometer.R;
-import de.j4velin.pedometer.SensorListener;
 
-public class Activity_Main extends FragmentActivity {
+public class ActivityMain extends FragmentActivity {
 
     @Override
     protected void onCreate(final Bundle b) {
         super.onCreate(b);
-        startService(new Intent(this, SensorListener.class));
+        startService(new Intent(this, PedometerManager.class));
         if (b == null) {
             // Create new fragment and transaction
-            Fragment newFragment = new OverviewFragment();
+            Fragment newFragment = new FragmentOverview();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
             // Replace whatever is in the fragment_container view with this
@@ -77,7 +77,7 @@ public class Activity_Main extends FragmentActivity {
                 break;
             case R.id.action_settings:
                 getFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, new Fragment_Settings()).addToBackStack(null)
+                        .replace(android.R.id.content, new FragmentSettings()).addToBackStack(null)
                         .commit();
                 break;
             case R.id.action_leaderboard:

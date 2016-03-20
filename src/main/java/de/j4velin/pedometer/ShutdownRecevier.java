@@ -29,7 +29,7 @@ public class ShutdownRecevier extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         if (BuildConfig.DEBUG) Logger.log("shutting down");
 
-        context.startService(new Intent(context, SensorListener.class));
+        context.startService(new Intent(context, PedometerManager.class));
 
         // if the user used a root script for shutdown, the DEVICE_SHUTDOWN
         // broadcast might not be send. Therefore, the app will check this
@@ -38,7 +38,7 @@ public class ShutdownRecevier extends BroadcastReceiver {
         context.getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS).edit()
                 .putBoolean("correctShutdown", true).commit();
 
-        Database db = Database.getInstance(context);
+        DatabaseManager db = DatabaseManager.getInstance(context);
         // if it's already a new day, add the temp. steps to the last one
         if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
             int steps = db.getCurrentSteps();

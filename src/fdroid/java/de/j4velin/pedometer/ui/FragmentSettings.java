@@ -48,12 +48,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
 
-import de.j4velin.pedometer.Database;
+import de.j4velin.pedometer.DatabaseManager;
 import de.j4velin.pedometer.PowerReceiver;
 import de.j4velin.pedometer.R;
-import de.j4velin.pedometer.SensorListener;
+import de.j4velin.pedometer.PedometerManager;
 
-public class Fragment_Settings extends PreferenceFragment implements OnPreferenceClickListener {
+public class FragmentSettings extends PreferenceFragment implements OnPreferenceClickListener {
 
     final static int DEFAULT_GOAL = 10000;
     final static float DEFAULT_STEP_SIZE = Locale.getDefault() == Locale.US ? 2.5f : 75f;
@@ -74,7 +74,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
                         getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS)
                                 .edit().putBoolean("notification", (Boolean) newValue).commit();
 
-                        getActivity().startService(new Intent(getActivity(), SensorListener.class)
+                        getActivity().startService(new Intent(getActivity(), PedometerManager.class)
                                 .putExtra("updateNotificationState", true));
                         return true;
                     }
@@ -135,7 +135,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return ((Activity_Main) getActivity()).optionsItemSelected(item);
+        return ((ActivityMain) getActivity()).optionsItemSelected(item);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
                                         getString(R.string.goal_summary, np.getValue()));
                                 dialog.dismiss();
                                 getActivity().startService(
-                                        new Intent(getActivity(), SensorListener.class)
+                                        new Intent(getActivity(), PedometerManager.class)
                                                 .putExtra("updateNotificationState", true));
                             }
                         });
@@ -281,7 +281,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
                         }).create().show();
                 return;
             }
-            Database db = Database.getInstance(getActivity());
+            DatabaseManager db = DatabaseManager.getInstance(getActivity());
             String line;
             String[] data;
             int ignored = 0, inserted = 0, skips = 0;
@@ -355,7 +355,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
             e.printStackTrace();
             return;
         }
-        Database db = Database.getInstance(getActivity());
+        DatabaseManager db = DatabaseManager.getInstance(getActivity());
         Cursor c =
                 db.query(new String[]{"date", "steps"}, "date > 0", null, null, null, "date", null);
         try {

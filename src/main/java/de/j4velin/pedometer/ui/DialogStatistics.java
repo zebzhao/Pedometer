@@ -26,11 +26,11 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 
-import de.j4velin.pedometer.Database;
+import de.j4velin.pedometer.DatabaseManager;
 import de.j4velin.pedometer.R;
 import de.j4velin.pedometer.util.Util;
 
-abstract class StatisticsDialog {
+abstract class DialogStatistics {
 
 	public static Dialog getDialog(final Context c, int since_boot) {
 		final Dialog d = new Dialog(c);
@@ -42,7 +42,7 @@ abstract class StatisticsDialog {
 				d.dismiss();
 			}
 		});
-		Database db = Database.getInstance(c);
+		DatabaseManager db = DatabaseManager.getInstance(c);
 
 		Pair<Date, Integer> record = db.getRecordData();
 
@@ -59,14 +59,14 @@ abstract class StatisticsDialog {
 		int thisMonth = db.getSteps(date.getTimeInMillis(), System.currentTimeMillis()) + since_boot;
 
 		((TextView) d.findViewById(R.id.record)).setText(
-                OverviewFragment.formatter.format(record.second) + " @ "
+                FragmentOverview.formatter.format(record.second) + " @ "
 				+ java.text.DateFormat.getDateInstance().format(record.first));
 
-		((TextView) d.findViewById(R.id.totalthisweek)).setText(OverviewFragment.formatter.format(thisWeek));
-		((TextView) d.findViewById(R.id.totalthismonth)).setText(OverviewFragment.formatter.format(thisMonth));
+		((TextView) d.findViewById(R.id.totalthisweek)).setText(FragmentOverview.formatter.format(thisWeek));
+		((TextView) d.findViewById(R.id.totalthismonth)).setText(FragmentOverview.formatter.format(thisMonth));
 
-		((TextView) d.findViewById(R.id.averagethisweek)).setText(OverviewFragment.formatter.format(thisWeek / 7));
-		((TextView) d.findViewById(R.id.averagethismonth)).setText(OverviewFragment.formatter.format(thisMonth / daysThisMonth));
+		((TextView) d.findViewById(R.id.averagethisweek)).setText(FragmentOverview.formatter.format(thisWeek / 7));
+		((TextView) d.findViewById(R.id.averagethismonth)).setText(FragmentOverview.formatter.format(thisMonth / daysThisMonth));
 		
 		db.close();
 		
