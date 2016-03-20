@@ -40,7 +40,7 @@ abstract class DialogSplit {
         long split_date = prefs.getLong("split_date", -1);
         int split_steps = prefs.getInt("split_steps", totalSteps);
         ((TextView) d.findViewById(R.id.steps))
-                .setText(FragmentOverview.formatter.format(totalSteps - split_steps));
+                .setText(FragmentOverviewController.formatter.format(totalSteps - split_steps));
         float stepsize = prefs.getFloat("stepsize_value", FragmentSettings.DEFAULT_STEP_SIZE);
         float distance = (totalSteps - split_steps) * stepsize;
         if (prefs.getString("stepsize_unit", FragmentSettings.DEFAULT_STEP_UNIT).equals("cm")) {
@@ -51,7 +51,7 @@ abstract class DialogSplit {
             ((TextView) d.findViewById(R.id.distanceunit)).setText("mi");
         }
         ((TextView) d.findViewById(R.id.distance))
-                .setText(FragmentOverview.formatter.format(distance));
+                .setText(FragmentOverviewController.formatter.format(distance));
         ((TextView) d.findViewById(R.id.date)).setText(c.getString(R.string.since,
                 java.text.DateFormat.getDateTimeInstance().format(split_date)));
 

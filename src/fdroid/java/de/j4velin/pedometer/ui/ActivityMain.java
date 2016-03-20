@@ -43,7 +43,7 @@ public class ActivityMain extends FragmentActivity {
         startService(new Intent(this, PedometerManager.class));
         if (b == null) {
             // Create new fragment and transaction
-            Fragment newFragment = new FragmentOverview();
+            Fragment newFragment = new FragmentOverviewController();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
             // Replace whatever is in the fragment_container view with this

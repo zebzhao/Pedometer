@@ -32,10 +32,9 @@ import de.j4velin.pedometer.util.Util;
 public class DatabaseManager extends SQLiteOpenHelper {
 
     private final static String DB_NAME = "steps";
-    private final static int DB_VERSION = 2;
+    private final static int DB_VERSION = 3;
 
     private static DatabaseManager instance;
-    private static final AtomicInteger openCounter = new AtomicInteger();
 
     private DatabaseManager(final Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -45,32 +44,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (instance == null) {
             instance = new DatabaseManager(c.getApplicationContext());
         }
-        openCounter.incrementAndGet();
         return instance;
     }
 
     @Override
-    public void close() {
-        if (openCounter.decrementAndGet() == 0) {
-            super.close();
-        }
-    }
-
-    @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + DB_NAME + " (date INTEGER, steps INTEGER)");
+        db.execSQL("CREATE TABLE " + DB_NAME + " (start INTEGER, end INTEGER, steps INTEGER)");
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1) {
-            // drop PRIMARY KEY constraint
-            db.execSQL("CREATE TABLE " + DB_NAME + "2 (date INTEGER, steps INTEGER)");
-            db.execSQL("INSERT INTO " + DB_NAME + "2 (date, steps) SELECT date, steps FROM " +
-                    DB_NAME);
-            db.execSQL("DROP TABLE " + DB_NAME);
-            db.execSQL("ALTER TABLE " + DB_NAME + "2 RENAME TO " + DB_NAME + "");
-        }
     }
 
     /**

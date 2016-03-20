@@ -59,14 +59,14 @@ abstract class DialogStatistics {
 		int thisMonth = db.getSteps(date.getTimeInMillis(), System.currentTimeMillis()) + since_boot;
 
 		((TextView) d.findViewById(R.id.record)).setText(
-                FragmentOverview.formatter.format(record.second) + " @ "
+                FragmentOverviewController.formatter.format(record.second) + " @ "
 				+ java.text.DateFormat.getDateInstance().format(record.first));
 
-		((TextView) d.findViewById(R.id.totalthisweek)).setText(FragmentOverview.formatter.format(thisWeek));
-		((TextView) d.findViewById(R.id.totalthismonth)).setText(FragmentOverview.formatter.format(thisMonth));
+		((TextView) d.findViewById(R.id.totalthisweek)).setText(FragmentOverviewController.formatter.format(thisWeek));
+		((TextView) d.findViewById(R.id.totalthismonth)).setText(FragmentOverviewController.formatter.format(thisMonth));
 
-		((TextView) d.findViewById(R.id.averagethisweek)).setText(FragmentOverview.formatter.format(thisWeek / 7));
-		((TextView) d.findViewById(R.id.averagethismonth)).setText(FragmentOverview.formatter.format(thisMonth / daysThisMonth));
+		((TextView) d.findViewById(R.id.averagethisweek)).setText(FragmentOverviewController.formatter.format(thisWeek / 7));
+		((TextView) d.findViewById(R.id.averagethismonth)).setText(FragmentOverviewController.formatter.format(thisMonth / daysThisMonth));
 		
 		db.close();
 		

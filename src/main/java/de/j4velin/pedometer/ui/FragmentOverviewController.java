@@ -54,7 +54,7 @@ import de.j4velin.pedometer.PedometerManager;
 import de.j4velin.pedometer.util.Logger;
 import de.j4velin.pedometer.util.Util;
 
-public class FragmentOverview extends Fragment implements SensorEventListener {
+public class FragmentOverviewController extends Fragment implements SensorEventListener {
 
     private TextView stepsView, totalView, averageView;
 

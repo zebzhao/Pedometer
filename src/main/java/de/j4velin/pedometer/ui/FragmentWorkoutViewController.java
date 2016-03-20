@@ -13,12 +13,12 @@ import de.j4velin.pedometer.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragmentWorkout.OnFragmentInteractionListener} interface
+ * {@link FragmentWorkoutViewController.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentWorkout#newInstance} factory method to
+ * Use the {@link FragmentWorkoutViewController#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentWorkout extends Fragment {
+public class FragmentWorkoutViewController extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,11 +36,11 @@ public class FragmentWorkout extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentWorkout.
+     * @return A new instance of fragment FragmentWorkoutViewController.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentWorkout newInstance(String param1, String param2) {
-        FragmentWorkout fragment = new FragmentWorkout();
+    public static FragmentWorkoutViewController newInstance(String param1, String param2) {
+        FragmentWorkoutViewController fragment = new FragmentWorkoutViewController();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -48,7 +48,7 @@ public class FragmentWorkout extends Fragment {
         return fragment;
     }
 
-    public FragmentWorkout() {
+    public FragmentWorkoutViewController() {
         // Required empty public constructor
     }
 
