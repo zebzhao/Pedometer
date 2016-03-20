@@ -54,7 +54,7 @@ import de.j4velin.pedometer.SensorListener;
 import de.j4velin.pedometer.util.Logger;
 import de.j4velin.pedometer.util.Util;
 
-public class Fragment_Overview extends Fragment implements SensorEventListener {
+public class OverviewFragment extends Fragment implements SensorEventListener {
 
     private TextView stepsView, totalView, averageView;
 
@@ -197,7 +197,7 @@ public class Fragment_Overview extends Fragment implements SensorEventListener {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_split_count:
-                Dialog_Split.getDialog(getActivity(),
+                SplitDialog.getDialog(getActivity(),
                         total_start + Math.max(todayOffset + since_boot, 0)).show();
                 return true;
             case R.id.action_pause:
@@ -351,7 +351,7 @@ public class Fragment_Overview extends Fragment implements SensorEventListener {
             barChart.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    Dialog_Statistics.getDialog(getActivity(), since_boot).show();
+                    StatisticsDialog.getDialog(getActivity(), since_boot).show();
                 }
             });
             barChart.startAnimation();

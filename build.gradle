@@ -16,32 +16,32 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
-
+    signingConfigs {
+        config {
+            keyAlias 'Test'
+            keyPassword 'Test'
+            storeFile file('key.properties')
+            storePassword 'Test'
+        }
+    }
     if (rootProject.ext.has("compileSdkVersion")) {
         compileSdkVersion rootProject.ext.compileSdkVersion
         buildToolsVersion rootProject.ext.buildToolsVersion
     } else {
         logger.warn('compileSdkVersion not found in rootProject')
         compileSdkVersion 22
-        buildToolsVersion "23.0.0 rc3"
+        buildToolsVersion "23.0.1"
     }
-
     defaultConfig {
         applicationId "de.j4velin.pedometer"
     }
-
-    signingConfigs {
-        release
-    }
-
     productFlavors {
-        play
+//        play
         fdroid
     }
-
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources false
@@ -49,7 +49,7 @@ android {
         }
         debug {
             debuggable true
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
             zipAlignEnabled true
             minifyEnabled false
         }
@@ -64,19 +64,19 @@ dependencies {
     compile 'com.github.j4velin.colorpicker:colorpicker:1.2.0'
     compile 'com.github.j4velin.EazeGraph:EazeGraph:1.0.2'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
-    playCompile 'com.google.android.gms:play-services-fitness:+'
-    playCompile 'com.google.android.gms:play-services-games:+'
-    playCompile 'com.google.android.gms:play-services-identity:+'
+    //    playCompile 'com.google.android.gms:play-services-fitness:+'
+    //    playCompile 'com.google.android.gms:play-services-games:+'
+    //    playCompile 'com.google.android.gms:play-services-identity:+'
 }
 
-def props = new Properties()
+//def props = new Properties()
 
-props.load(new FileInputStream(project.file("key.properties")))
+//props.load(new FileInputStream(project.file("key.properties")))
 
-android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+//android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
 
-android.signingConfigs.release.storePassword props.keyStorePassword
+//android.signingConfigs.release.storePassword props.keyStorePassword
 
-android.signingConfigs.release.keyAlias props.keyAlias
+//android.signingConfigs.release.keyAlias props.keyAlias
 
-android.signingConfigs.release.keyPassword props.keyAliasPassword
+//android.signingConfigs.release.keyPassword props.keyAliasPassword
