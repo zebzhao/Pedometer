@@ -89,13 +89,6 @@
 
         <service android:name=".widget.WidgetUpdateService"/>
 
-        <receiver
-            android:name=".util.TimeZoneListener">
-            <intent-filter>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

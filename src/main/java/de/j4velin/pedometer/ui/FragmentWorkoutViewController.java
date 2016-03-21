@@ -1,6 +1,11 @@
 package de.j4velin.pedometer.ui;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -8,7 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.j4velin.pedometer.BuildConfig;
+import de.j4velin.pedometer.DatabaseManager;
 import de.j4velin.pedometer.R;
+import de.j4velin.pedometer.util.Logger;
+import de.j4velin.pedometer.util.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +27,7 @@ import de.j4velin.pedometer.R;
  * Use the {@link FragmentWorkoutViewController#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentWorkoutViewController extends Fragment {
+public class FragmentWorkoutViewController extends Fragment implements SensorEventListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +68,12 @@ public class FragmentWorkoutViewController extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        // register a sensorlistener to live update the UI if a step is taken
+        SensorManager sm =
+                (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
+                SensorManager.SENSOR_DELAY_UI, 0);
     }
 
     @Override
@@ -68,11 +83,51 @@ public class FragmentWorkoutViewController extends Fragment {
         return inflater.inflate(R.layout.fragment_workout_view, container, false);
     }
 
+    @Override
+    public void onAccuracyChanged(final Sensor sensor, int accuracy) {
+        // won't happen
+    }
+
+    @Override
+    public void onSensorChanged(final SensorEvent event) {
+        if (BuildConfig.DEBUG)
+            Logger.log("UI - sensorChanged | todayOffset: " + todayOffset + " since boot: " +
+                    event.values[0]);
+        if (event.values[0] > Integer.MAX_VALUE || event.values[0] == 0) {
+            return;
+        }
+        if (todayOffset == Integer.MIN_VALUE) {
+            // no values for today
+            // we dont know when the reboot was, so set todays steps to 0 by
+            // initializing them with -STEPS_SINCE_BOOT
+            todayOffset = -(int) event.values[0];
+            DatabaseManager db = DatabaseManager.getInstance(getActivity());
+            db.insertNewDay(Util.getToday(), (int) event.values[0]);
+            db.close();
+        }
+        since_boot = (int) event.values[0];
+        updatePie();
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Stop sensor here
+        DatabaseManager db = DatabaseManager.getInstance(getActivity());
+        // TODO: Save current data
+        db.close();
     }
 
     @Override
