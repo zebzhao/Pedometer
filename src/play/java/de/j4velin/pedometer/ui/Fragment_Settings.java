@@ -53,7 +53,6 @@ import java.util.Locale;
 
 import de.j4velin.pedometer.BuildConfig;
 import de.j4velin.pedometer.Database;
-import de.j4velin.pedometer.PowerReceiver;
 import de.j4velin.pedometer.R;
 import de.j4velin.pedometer.SensorListener;
 import de.j4velin.pedometer.util.Logger;
