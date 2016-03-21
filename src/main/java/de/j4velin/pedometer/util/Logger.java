@@ -16,7 +16,6 @@
 
 package de.j4velin.pedometer.util;
 
-import android.database.Cursor;
 import android.os.Environment;
 
 import java.io.File;
@@ -36,22 +35,6 @@ public abstract class Logger {
         log(ex.getMessage());
         for (StackTraceElement ste : ex.getStackTrace()) {
             log(ste.toString());
-        }
-    }
-
-    public static void log(final Cursor c) {
-        if (!BuildConfig.DEBUG) return;
-        c.moveToFirst();
-        String title = "";
-        for (int i = 0; i < c.getColumnCount(); i++)
-            title += c.getColumnName(i) + "\t| ";
-        log(title);
-        while (!c.isAfterLast()) {
-            title = "";
-            for (int i = 0; i < c.getColumnCount(); i++)
-                title += c.getString(i) + "\t| ";
-            log(title);
-            c.moveToNext();
         }
     }
 

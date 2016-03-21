@@ -90,23 +90,7 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
 
     @Override
     public void onSensorChanged(final SensorEvent event) {
-        if (BuildConfig.DEBUG)
-            Logger.log("UI - sensorChanged | todayOffset: " + todayOffset + " since boot: " +
-                    event.values[0]);
-        if (event.values[0] > Integer.MAX_VALUE || event.values[0] == 0) {
-            return;
-        }
-        if (todayOffset == Integer.MIN_VALUE) {
-            // no values for today
-            // we dont know when the reboot was, so set todays steps to 0 by
-            // initializing them with -STEPS_SINCE_BOOT
-            todayOffset = -(int) event.values[0];
-            DatabaseManager db = DatabaseManager.getInstance(getActivity());
-            db.insertNewDay(Util.getToday(), (int) event.values[0]);
-            db.close();
-        }
-        since_boot = (int) event.values[0];
-        updatePie();
+        // TODO: make calculations and win
     }
 
     // TODO: Rename method, update argument and hook method into UI event
