@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import de.j4velin.pedometer.util.Logger;
-import de.j4velin.pedometer.util.Util;
 
 public class ShutdownRecevier extends BroadcastReceiver {
 

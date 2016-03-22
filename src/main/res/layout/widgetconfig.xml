@@ -21,21 +21,4 @@
         android:layout_marginTop="15dp"
         android:text="@string/background_color"/>
 
-    <de.j4velin.pedometer.util.ColorPreview
-        android:id="@+id/bgcolor"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignTop="@+id/bgtext"
-        android:layout_toRightOf="@+id/bgtext"
-        android:layout_marginLeft="15dp"
-        />
-
-    <de.j4velin.pedometer.util.ColorPreview
-        android:id="@+id/textcolor"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignTop="@+id/texttext"
-        android:layout_alignLeft="@+id/bgcolor"
-        />
-
 </RelativeLayout>

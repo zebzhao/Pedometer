@@ -17,15 +17,10 @@ package de.j4velin.pedometer.ui;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,23 +31,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import de.j4velin.pedometer.DatabaseManager;
-import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
-import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import de.j4velin.pedometer.BuildConfig;
 import de.j4velin.pedometer.R;
-import de.j4velin.pedometer.PedometerManager;
 import de.j4velin.pedometer.util.Logger;
-import de.j4velin.pedometer.util.Util;
 
 public class FragmentOverviewController extends Fragment {
 
