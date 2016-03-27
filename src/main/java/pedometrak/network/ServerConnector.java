@@ -1,11 +1,13 @@
-package pedometrak;
+package pedometrak.network;
 
 import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ServerConnector {
@@ -40,10 +42,29 @@ public class ServerConnector {
         return mRequestQueue;
     }
 
-    public void makeSampleRequest(Response.Listener<JSONObject> onSuccess, Response.ErrorListener onError) {
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, onSuccess, onError);
+    public void makeSampleRequest(final JsonRequestCallback callback) {
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // the response is already constructed as a JSONObject!
+                        try {
+                            response = response.getJSONObject("args");
+                            callback.onSuccess(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError();
+                        error.printStackTrace();
+                    }
+                });
+
         // Access the RequestQueue through your singleton class.
-        mRequestQueue.add(jsObjRequest);
+        mRequestQueue.add(jsonRequest);
     }
 }
