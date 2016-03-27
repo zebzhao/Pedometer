@@ -9,24 +9,23 @@
             xmlns:eaze="http://schemas.android.com/apk/res-auto"
             android:id="@+id/graph"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="230dp"
             eaze:egLegendHeight="0dp"
             eaze:egInnerPadding="75"
             eaze:egHighlightStrength="1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="46dp" android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_marginTop="15dp" android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"/>
 
     <TextView
             android:id="@+id/steps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
             android:gravity="center"
             android:textSize="45sp"
             android:text="10"
-            android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
-            android:layout_alignTop="@+id/graph" android:layout_centerHorizontal="true"/>
+            android:layout_alignTop="@+id/graph" android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/graph"/>
 
     <TextView
             android:id="@+id/unit"
@@ -34,8 +33,9 @@
             android:layout_height="wrap_content"
             android:text="steps"
             android:textSize="20sp"
-            android:layout_below="@+id/steps"
-            android:layout_alignStart="@+id/steps" android:layout_alignEnd="@+id/steps" android:gravity="center"/>
+            android:layout_alignStart="@+id/steps" android:layout_alignEnd="@+id/steps" android:gravity="center"
+            android:layout_alignTop="@+id/steps" android:layout_alignBottom="@+id/steps"
+            android:layout_marginTop="60dp"/>
 
     <org.eazegraph.lib.charts.BarChart
             xmlns:eaze="http://schemas.android.com/apk/res-auto"
@@ -45,11 +45,13 @@
             eaze:egLegendHeight="35dp"
             eaze:egShowValues="true"
             android:layout_marginTop="30dp"
-            android:layout_below="@+id/graph" android:layout_alignStart="@+id/graph"/>
+            android:layout_below="@+id/graph" android:layout_alignStart="@+id/graph" android:layout_above="@+id/start"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start Workout"
-            android:id="@+id/start" android:layout_below="@+id/bargraph" android:layout_centerHorizontal="true"/>
+            android:id="@+id/start" android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
