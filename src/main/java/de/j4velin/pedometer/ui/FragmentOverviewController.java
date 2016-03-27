@@ -48,7 +48,6 @@ public class FragmentOverviewController extends Fragment {
     private PieModel sliceGoal, sliceCurrent;
     private PieChart pg;
 
-    private int todayOffset, total_start, goal, since_boot, total_days;
     public final static NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
     private boolean showSteps = true;
 
@@ -72,7 +71,7 @@ public class FragmentOverviewController extends Fragment {
         pg.addPieSlice(sliceCurrent);
 
         // slice for the "missing" steps until reaching the goal
-        sliceGoal = new PieModel("", FragmentSettings.DEFAULT_GOAL, Color.parseColor("#CC0000"));
+        sliceGoal = new PieModel("", 10000, Color.parseColor("#CC0000"));
         pg.addPieSlice(sliceGoal);
 
         pg.setOnClickListener(new OnClickListener() {
@@ -112,59 +111,6 @@ public class FragmentOverviewController extends Fragment {
                 return true;
             default:
                 return ((ActivityMain) getActivity()).optionsItemSelected(item);
-        }
-    }
-
-
-
-
-
-    /**
-     * Updates the pie graph to show todays steps/distance as well as the
-     * yesterday and total values. Should be called when switching from step
-     * count to distance.
-     */
-    private void updatePie() {
-        if (BuildConfig.DEBUG) Logger.log("UI - update steps: " + since_boot);
-        // todayOffset might still be Integer.MIN_VALUE on first start
-        int steps_today = Math.max(todayOffset + since_boot, 0);
-        sliceCurrent.setValue(steps_today);
-        if (goal - steps_today > 0) {
-            // goal not reached yet
-            if (pg.getData().size() == 1) {
-                // can happen if the goal value was changed: old goal value was
-                // reached but now there are some steps missing for the new goal
-                pg.addPieSlice(sliceGoal);
-            }
-            sliceGoal.setValue(goal - steps_today);
-        } else {
-            // goal reached
-            pg.clearChart();
-            pg.addPieSlice(sliceCurrent);
-        }
-        pg.update();
-        if (showSteps) {
-            stepsView.setText(formatter.format(steps_today));
-            totalView.setText(formatter.format(total_start + steps_today));
-            averageView.setText(formatter.format((total_start + steps_today) / total_days));
-        } else {
-            // update only every 10 steps when displaying distance
-            SharedPreferences prefs =
-                    getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
-            float stepsize = prefs.getFloat("stepsize_value", FragmentSettings.DEFAULT_STEP_SIZE);
-            float distance_today = steps_today * stepsize;
-            float distance_total = (total_start + steps_today) * stepsize;
-            if (prefs.getString("stepsize_unit", FragmentSettings.DEFAULT_STEP_UNIT)
-                    .equals("cm")) {
-                distance_today /= 100000;
-                distance_total /= 100000;
-            } else {
-                distance_today /= 5280;
-                distance_total /= 5280;
-            }
-            stepsView.setText(formatter.format(distance_today));
-            totalView.setText(formatter.format(distance_total));
-            averageView.setText(formatter.format(distance_total / total_days));
         }
     }
 

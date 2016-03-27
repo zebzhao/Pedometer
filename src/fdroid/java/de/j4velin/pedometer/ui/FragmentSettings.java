@@ -52,7 +52,6 @@ import de.j4velin.pedometer.PedometerManager;
 
 public class FragmentSettings extends PreferenceFragment implements OnPreferenceClickListener {
 
-    final static int DEFAULT_GOAL = 10000;
     final static float DEFAULT_STEP_SIZE = Locale.getDefault() == Locale.US ? 2.5f : 75f;
     final static String DEFAULT_STEP_UNIT = Locale.getDefault() == Locale.US ? "ft" : "cm";
 
@@ -61,32 +60,9 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
-        findPreference("import").setOnPreferenceClickListener(this);
-        findPreference("export").setOnPreferenceClickListener(this);
-
-        findPreference("notification")
-                .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                        getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS)
-                                .edit().putBoolean("notification", (Boolean) newValue).commit();
-
-                        getActivity().startService(new Intent(getActivity(), PedometerManager.class)
-                                .putExtra("updateNotificationState", true));
-                        return true;
-                    }
-                });
-
-        Preference account = findPreference("account");
-        account.setSummary("This feature is not available on the F-Droid version of the app");
-        account.setEnabled(false);
 
         final SharedPreferences prefs =
                 getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
-
-        Preference goal = findPreference("goal");
-        goal.setOnPreferenceClickListener(this);
-        goal.setSummary(getString(R.string.goal_summary, prefs.getInt("goal", DEFAULT_GOAL)));
 
         Preference stepsize = findPreference("stepsize");
         stepsize.setOnPreferenceClickListener(this);
@@ -127,75 +103,47 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
         View v;
         final SharedPreferences prefs =
                 getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
+
         switch (preference.getTitleRes()) {
-            case R.string.goal:
-                builder = new AlertDialog.Builder(getActivity());
-                final NumberPicker np = new NumberPicker(getActivity());
-                np.setMinValue(1);
-                np.setMaxValue(100000);
-                np.setValue(prefs.getInt("goal", 10000));
-                builder.setView(np);
-                builder.setTitle(R.string.set_goal);
-                builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                np.clearFocus();
-                                prefs.edit().putInt("goal", np.getValue()).commit();
-                                preference.setSummary(
-                                        getString(R.string.goal_summary, np.getValue()));
-                                dialog.dismiss();
-                                getActivity().startService(
-                                        new Intent(getActivity(), PedometerManager.class)
-                                                .putExtra("updateNotificationState", true));
-                            }
-                        });
-                builder.setNegativeButton(android.R.string.cancel, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                Dialog dialog = builder.create();
-                dialog.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                dialog.show();
-                break;
             case R.string.step_size:
                 builder = new AlertDialog.Builder(getActivity());
+
                 v = getActivity().getLayoutInflater().inflate(R.layout.stepsize, null);
+
                 final RadioGroup unit = (RadioGroup) v.findViewById(R.id.unit);
                 final EditText value = (EditText) v.findViewById(R.id.value);
-                unit.check(
-                        prefs.getString("stepsize_unit", DEFAULT_STEP_UNIT).equals("cm") ? R.id.cm :
-                                R.id.ft);
+
+                unit.check(prefs.getString("stepsize_unit", DEFAULT_STEP_UNIT).equals("cm") ? R.id.cm : R.id.ft);
+
                 value.setText(String.valueOf(prefs.getFloat("stepsize_value", DEFAULT_STEP_SIZE)));
+
                 builder.setView(v);
                 builder.setTitle(R.string.set_step_size);
+
                 builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    prefs.edit().putFloat("stepsize_value",
-                                            Float.valueOf(value.getText().toString()))
-                                            .putString("stepsize_unit",
-                                                    unit.getCheckedRadioButtonId() == R.id.cm ?
-                                                            "cm" : "ft").apply();
-                                    preference.setSummary(getString(R.string.step_size_summary,
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            prefs.edit()
+                                    .putFloat("stepsize_value", Float.valueOf(value.getText().toString()))
+                                    .putString("stepsize_unit", unit.getCheckedRadioButtonId() == R.id.cm ? "cm" : "ft").apply();
+                            preference
+                                    .setSummary(
+                                            getString(R.string.step_size_summary,
                                             Float.valueOf(value.getText().toString()),
-                                            unit.getCheckedRadioButtonId() == R.id.cm ? "cm" :
-                                                    "ft"));
-                                } catch (NumberFormatException nfe) {
-                                    nfe.printStackTrace();
-                                }
-                                dialog.dismiss();
-                            }
-                        });
+                                                    unit.getCheckedRadioButtonId() == R.id.cm ? "cm" : "ft"));
+                        } catch (NumberFormatException nfe) {
+                            nfe.printStackTrace();
+                        }
+                        dialog.dismiss();
+                    }
+                });
                 builder.setNegativeButton(android.R.string.cancel, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
                 builder.create().show();
                 break;
         }
