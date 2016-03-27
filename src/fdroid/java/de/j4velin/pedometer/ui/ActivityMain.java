@@ -23,14 +23,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import java.util.TimeZone;
 
 import de.j4velin.pedometer.PedometerManager;
 import de.j4velin.pedometer.R;
@@ -40,7 +37,9 @@ public class ActivityMain extends FragmentActivity {
     @Override
     protected void onCreate(final Bundle b) {
         super.onCreate(b);
+
         startService(new Intent(this, PedometerManager.class));
+
         if (b == null) {
             // Create new fragment and transaction
             Fragment newFragment = new FragmentOverviewController();
@@ -53,11 +52,6 @@ public class ActivityMain extends FragmentActivity {
 
             // Commit the transaction
             transaction.commit();
-        }
-
-        if (!getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS).contains("timezone")) {
-            getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS).edit()
-                    .putString("timezone", TimeZone.getDefault().getID()).commit();
         }
     }
 

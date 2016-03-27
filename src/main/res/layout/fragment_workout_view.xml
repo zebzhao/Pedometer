@@ -1,13 +1,47 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="de.j4velin.pedometer.ui.FragmentWorkoutViewController">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <org.eazegraph.lib.charts.BarChart
+            xmlns:eaze="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/bargraph"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            android:layout_height="wrap_content"
+            eaze:egLegendHeight="35dp"
+            eaze:egShowValues="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false" android:layout_below="@+id/chronometer"
+            android:layout_alignParentLeft="true" android:layout_alignParentTop="false"
+            android:layout_above="@+id/linegraph" android:layout_marginLeft="5dp" android:layout_marginRight="5dp"/>
 
-</FrameLayout>
+    <Chronometer
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chronometer"
+            android:layout_centerHorizontal="true" android:textSize="80sp" android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true" android:gravity="center_horizontal"/>
+
+    <org.eazegraph.lib.charts.ValueLineChart
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/linegraph"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:egUseCubic="true"
+            app:egUseOverlapFill="true"
+            app:egCurveSmoothness="0.4"
+            app:egIndicatorLineColor="#FE6DA8"
+            app:egLegendHeight="40dp"
+            app:egShowStandardValue="true" android:layout_above="@+id/stop" android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stop_workout"
+            android:id="@+id/stop" android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentRight="true"/>
+
+</RelativeLayout>
