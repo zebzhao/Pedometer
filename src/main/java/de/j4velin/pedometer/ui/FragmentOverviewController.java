@@ -43,7 +43,7 @@ import de.j4velin.pedometer.util.Logger;
 
 public class FragmentOverviewController extends Fragment {
 
-    private TextView stepsView, totalView, averageView;
+    private TextView stepsView;
 
     private PieModel sliceGoal, sliceCurrent;
     private PieChart pg;
@@ -61,8 +61,6 @@ public class FragmentOverviewController extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_overview, null);
         stepsView = (TextView) v.findViewById(R.id.steps);
-        totalView = (TextView) v.findViewById(R.id.total);
-        averageView = (TextView) v.findViewById(R.id.average);
 
         pg = (PieChart) v.findViewById(R.id.graph);
 
