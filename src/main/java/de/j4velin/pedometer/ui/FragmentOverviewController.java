@@ -88,28 +88,11 @@ public class FragmentOverviewController extends Fragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        MenuItem pause = menu.getItem(0);
-        Drawable d;
-        if (getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS)
-                .contains("pauseCount")) { // currently paused
-            pause.setTitle(R.string.resume);
-            d = getResources().getDrawable(R.drawable.ic_resume);
-        } else {
-            pause.setTitle(R.string.pause);
-            d = getResources().getDrawable(R.drawable.ic_pause);
-        }
-        d.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        pause.setIcon(d);
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_pause:
-                return true;
-            default:
-                return ((ActivityMain) getActivity()).optionsItemSelected(item);
-        }
+        return ((ActivityMain) getActivity()).optionsItemSelected(item);
     }
 
 }

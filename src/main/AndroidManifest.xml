@@ -6,27 +6,27 @@
           xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
-        android:minSdkVersion="19"
-        android:targetSdkVersion="21"/>
+            android:minSdkVersion="21"
+            android:targetSdkVersion="23"/>
 
     <uses-feature
-        android:name="android.hardware.sensor.stepcounter"
-        android:required="true"/>
+            android:name="android.hardware.sensor.stepcounter"
+            android:required="true"/>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
-        tools:replace="label"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
+            tools:replace="label"
+            android:allowBackup="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
 
         <activity
-            android:name=".ui.ActivityMain"
-            android:label="@string/app_name"
-            android:launchMode="singleTask">
+                android:name=".ui.ActivityMain"
+                android:label="@string/app_name"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -41,23 +41,15 @@
         </receiver>
 
         <service
-            android:name=".PedometerManager"/>
+                android:name=".PedometerManager"/>
 
         <receiver
-            android:name=".ShutdownRecevier">
+                android:name=".ShutdownRecevier">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="de.j4velin.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".widget.WidgetConfig"
-            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-            </intent-filter>
-        </activity>
 
     </application>
 

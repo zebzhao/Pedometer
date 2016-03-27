@@ -80,26 +80,6 @@ public class ActivityMain extends FragmentActivity {
                         .replace(android.R.id.content, new FragmentSettings()).addToBackStack(null)
                         .commit();
                 break;
-            case R.id.action_leaderboard:
-            case R.id.action_achievements:
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
-                builder2.setTitle("Google services required");
-                builder2.setMessage(
-                        "This feature is not available on the F-Droid version of the app");
-                builder2.setNegativeButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                builder2.create().show();
-                break;
-            case R.id.action_faq:
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://j4velin.de/faq/index.php?app=pm"))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                break;
             case R.id.action_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.about);
