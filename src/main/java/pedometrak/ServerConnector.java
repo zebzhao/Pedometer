@@ -1,4 +1,4 @@
-package de.j4velin.pedometer;
+package pedometrak;
 
 import android.content.Context;
 import com.android.volley.Request;

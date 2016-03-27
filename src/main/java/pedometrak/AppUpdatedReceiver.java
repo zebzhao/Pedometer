@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.j4velin.pedometer;
+package pedometrak;
 
-import de.j4velin.pedometer.util.Logger;
+import pedometrak.util.Logger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="de.j4velin.pedometer.ui.FragmentWorkoutViewController">
+             tools:context="pedometrak.ui.FragmentWorkoutViewController">
 
     <org.eazegraph.lib.charts.BarChart
             xmlns:eaze="http://schemas.android.com/apk/res-auto"

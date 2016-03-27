@@ -1,4 +1,4 @@
-package de.j4velin.pedometer;
+package pedometrak;
 
 public class MetricCalculator {
     public static float calculateDistance() {

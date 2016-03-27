@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package de.j4velin.pedometer.ui;
+package pedometrak.ui;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -29,8 +28,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import de.j4velin.pedometer.PedometerManager;
-import de.j4velin.pedometer.R;
+import pedometrak.PedometerManager;
+import pedometrak.R;
 
 public class ActivityMain extends FragmentActivity {
 
