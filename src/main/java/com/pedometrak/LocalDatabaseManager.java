@@ -9,6 +9,7 @@ import com.pedometrak.data.SessionData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LocalDatabaseManager extends SQLiteOpenHelper {
 
@@ -98,6 +99,23 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
         Cursor c = getReadableDatabase().rawQuery("SELECT SUM(distance) FROM metrics", null);
 
         int result = -1;
+        if (c.moveToFirst()) {
+            result = c.getInt(0);
+        }
+        c.close();
+        return result;
+    }
+
+    /**
+     * Set the sync column to true
+     *
+     * @return 1 is success
+     */
+    public int setSyncFlag(long startTime) {
+        Cursor c = getReadableDatabase().rawQuery(
+                "UPDATE metrics SET sync=1 WHERE start=" + Objects.toString(startTime, "0"), null);
+
+        int result = 0;
         if (c.moveToFirst()) {
             result = c.getInt(0);
         }

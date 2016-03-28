@@ -33,6 +33,12 @@ import com.pedometrak.LocalDatabaseManager;
 import com.pedometrak.PedometerManager;
 import com.pedometrak.R;
 import com.pedometrak.data.SessionData;
+import com.pedometrak.network.JsonRequestCallback;
+import com.pedometrak.network.ServerConnector;
+import com.pedometrak.util.Logger;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class ActivityMain extends FragmentActivity {
 
@@ -148,5 +154,20 @@ public class ActivityMain extends FragmentActivity {
      * Commits session data to the local database and send it to the server.
      */
     private void saveUnsynchedSessions() {
+        final LocalDatabaseManager db =LocalDatabaseManager.getInstance(this);
+        List<SessionData> data = db.getUnsynchedSessions();
+        for (final SessionData session : data) {
+            ServerConnector.getInstance(this).sendSession(
+                    session.start, session.end, session.steps, session.distance, session.calories, new JsonRequestCallback() {
+                        @Override
+                        public void onSuccess(JSONObject response) {
+                            int rowsAffected = db.setSyncFlag(session.start);
+                            Logger.log(rowsAffected + " rows affected by sync update!");
+                        }
+                        @Override
+                        public void onError() {
+                        }
+                    });
+        }
     }
 }

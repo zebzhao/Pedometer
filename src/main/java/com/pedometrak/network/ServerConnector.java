@@ -79,8 +79,8 @@ public class ServerConnector {
         // Create payload for session
         JSONObject payload = new JSONObject();
         addKey(payload, "UUID", uuid);
-        addKey(payload, "startTime", start);
-        addKey(payload, "endTime", end);
+        addKey(payload, "startTime", (start/1000));
+        addKey(payload, "endTime", (end/1000));
         addKey(payload, "stepsTaken", steps);
         addKey(payload, "distanceTravelled", distance);
         addKey(payload, "caloriesBurned", calories);
