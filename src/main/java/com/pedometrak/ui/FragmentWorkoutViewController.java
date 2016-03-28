@@ -12,36 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pedometrak.DatabaseManager;
+import com.pedometrak.MetricCalculator;
 import com.pedometrak.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentWorkoutViewController#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class FragmentWorkoutViewController extends Fragment implements SensorEventListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentWorkoutViewController.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentWorkoutViewController newInstance(String param1, String param2) {
-        FragmentWorkoutViewController fragment = new FragmentWorkoutViewController();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public FragmentWorkoutViewController() {
         // Required empty public constructor
@@ -50,11 +28,6 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // register a sensorlistener to live update the UI if a step is taken
-        SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
-                SensorManager.SENSOR_DELAY_UI, 0);
     }
 
     @Override
@@ -71,18 +44,32 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
 
     @Override
     public void onSensorChanged(final SensorEvent event) {
-        // TODO: make calculations and win
+        int step = MetricCalculator.calculateSteps();
+        float cal = MetricCalculator.calculateCalories();
+        float dist = MetricCalculator.calculateDistance();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // Register a sensor listener to update the UI if a step is taken
+        SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
+                SensorManager.SENSOR_DELAY_UI, 0);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
         // Stop sensor here
+        try {
+            SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+            sm.unregisterListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         DatabaseManager db = DatabaseManager.getInstance(getActivity());
         // TODO: Save current data
         db.close();
