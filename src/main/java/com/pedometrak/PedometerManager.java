@@ -76,12 +76,14 @@ public class PedometerManager extends Service implements SensorEventListener {
     public int onStartCommand(final Intent intent, int flags, int startId) {
         if (intent == null || ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
             stopSelf();
+            unregisterSensor();
             return START_NOT_STICKY;
         }
         else {
             if (BuildConfig.DEBUG)
                 Logger.log("onStartCommand action: " + intent.getStringExtra("action"));
             // May be Sticky in the future
+            registerSensor();
             return START_NOT_STICKY;
         }
     }
@@ -90,7 +92,7 @@ public class PedometerManager extends Service implements SensorEventListener {
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) Logger.log("PedometerManager onCreate");
-        reRegisterSensor();
+        registerSensor();
     }
 
     @Override
@@ -107,6 +109,22 @@ public class PedometerManager extends Service implements SensorEventListener {
     public void onDestroy() {
         super.onDestroy();
         if (BuildConfig.DEBUG) Logger.log("PedometerManager onDestroy");
+
+            SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+            sm.unregisterListener(this);
+
+    }
+
+    private void registerSensor() {
+        if (BuildConfig.DEBUG) Logger.log("Pedometer sensor registered");
+        SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        // Enable batching with delay of max 1 seconds
+        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
+                SensorManager.SENSOR_DELAY_NORMAL, MICROSECONDS_IN_ONE_SECOND);
+    }
+
+    private void unregisterSensor() {
+        if (BuildConfig.DEBUG) Logger.log("Pedometer sensor removed");
         try {
             SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
             sm.unregisterListener(this);
@@ -114,26 +132,5 @@ public class PedometerManager extends Service implements SensorEventListener {
             if (BuildConfig.DEBUG) Logger.log(e);
             e.printStackTrace();
         }
-    }
-
-    private void reRegisterSensor() {
-        if (BuildConfig.DEBUG) Logger.log("re-register sensor listener");
-        SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-        try {
-            sm.unregisterListener(this);
-        } catch (Exception e) {
-            if (BuildConfig.DEBUG) Logger.log(e);
-            e.printStackTrace();
-        }
-
-        if (BuildConfig.DEBUG) {
-            Logger.log("step sensors: " + sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size());
-            if (sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size() < 1) return; // emulator
-            Logger.log("default: " + sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER).getName());
-        }
-
-        // enable batching with delay of max 2 seconds
-        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
-                SensorManager.SENSOR_DELAY_NORMAL, MICROSECONDS_IN_ONE_SECOND);
     }
 }

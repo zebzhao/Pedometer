@@ -1,10 +1,8 @@
 package com.pedometrak;
 
-import com.pedometrak.ui.FragmentSettings;
-
 public class MetricCalculator {
 
-    private static float mStrideLength = FragmentSettings.DEFAULT_STEP_SIZE;
+    private static float mStrideLength;
 
     public static void changeStrideLength(float stride) {
         mStrideLength = stride;

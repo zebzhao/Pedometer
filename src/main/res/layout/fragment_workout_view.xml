@@ -14,7 +14,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="false" android:layout_below="@+id/chronometer"
             android:layout_alignParentLeft="true" android:layout_alignParentTop="false"
-            android:layout_above="@+id/linegraph" android:layout_marginLeft="5dp" android:layout_marginRight="5dp"/>
+            android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:layout_above="@+id/stats"/>
 
     <Chronometer
             android:layout_width="wrap_content"
@@ -22,18 +22,6 @@
             android:id="@+id/chronometer"
             android:layout_centerHorizontal="true" android:textSize="80sp" android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true" android:gravity="center_horizontal"/>
-
-    <org.eazegraph.lib.charts.ValueLineChart
-            xmlns:eaze="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/linegraph"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            eaze:egUseCubic="true"
-            eaze:egUseOverlapFill="true"
-            eaze:egCurveSmoothness="0.4"
-            eaze:egLegendHeight="40dp"
-            android:layout_above="@+id/stop" android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"/>
 
     <Button
             android:layout_width="wrap_content"
@@ -43,5 +31,12 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true" android:layout_alignParentRight="true"
             android:onClick="closeWorkoutFragment"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/stats" android:layout_above="@+id/stop" android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentRight="true" android:height="150dp"
+            android:gravity="center_vertical|center_horizontal"/>
 
 </RelativeLayout>
