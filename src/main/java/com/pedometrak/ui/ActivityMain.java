@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.pedometrak.PedometerManager;
@@ -63,13 +64,21 @@ public class ActivityMain extends FragmentActivity {
         }
     }
 
+    public void startWorkoutFragment(View v) {
+        getFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.content, new FragmentWorkoutViewController()).addToBackStack(null)
+                .commit();
+    }
+
     public boolean optionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getFragmentManager().popBackStackImmediate();
                 break;
             case R.id.action_settings:
-                getFragmentManager().beginTransaction()
+                getFragmentManager()
+                        .beginTransaction()
                         .replace(android.R.id.content, new FragmentSettings()).addToBackStack(null)
                         .commit();
                 break;
@@ -77,8 +86,9 @@ public class ActivityMain extends FragmentActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.about);
                 TextView tv = new TextView(this);
-                tv.setPadding(10, 10, 10, 10);
+                tv.setPadding(30, 30, 30, 30);
                 tv.setText(R.string.about_text_links);
+
                 try {
                     tv.append(getString(R.string.about_app_version,
                             getPackageManager().getPackageInfo(getPackageName(), 0).versionName));
