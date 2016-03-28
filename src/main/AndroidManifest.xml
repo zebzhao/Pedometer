@@ -34,22 +34,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AppUpdatedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
-            </intent-filter>
-        </receiver>
-
         <service
                 android:name=".PedometerManager"/>
-
-        <receiver
-                android:name=".ShutdownRecevier">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
-                <action android:name="ACTION_SHUTDOWN"/>
-            </intent-filter>
-        </receiver>
 
     </application>
 

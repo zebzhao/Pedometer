@@ -6,20 +6,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseManager extends SQLiteOpenHelper {
+public class LocalDatabaseManager extends SQLiteOpenHelper {
 
     private final static String DB_NAME = "metrics";
     private final static int DB_VERSION = 3;
 
-    private static DatabaseManager instance;
+    private static LocalDatabaseManager instance;
 
-    private DatabaseManager(final Context context) {
+    private LocalDatabaseManager(final Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    public static synchronized DatabaseManager getInstance(final Context c) {
+    public static synchronized LocalDatabaseManager getInstance(final Context c) {
         if (instance == null) {
-            instance = new DatabaseManager(c.getApplicationContext());
+            instance = new LocalDatabaseManager(c.getApplicationContext());
         }
         return instance;
     }

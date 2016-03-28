@@ -77,7 +77,7 @@ public class ActivityMain extends FragmentActivity {
     }
 
 
-    public boolean optionsItemSelected(final MenuItem item) {
+    public boolean handleItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getFragmentManager().popBackStackImmediate();

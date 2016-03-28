@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import com.pedometrak.BuildConfig;
-import com.pedometrak.DatabaseManager;
+import com.pedometrak.LocalDatabaseManager;
 import com.pedometrak.MetricCalculator;
 import com.pedometrak.R;
 import com.pedometrak.util.Logger;
@@ -120,7 +120,7 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
             e.printStackTrace();
         }
 
-        DatabaseManager db = DatabaseManager.getInstance(getActivity());
+        LocalDatabaseManager db = LocalDatabaseManager.getInstance(getActivity());
         // TODO: Save current data
         db.close();
     }

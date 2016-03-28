@@ -6,38 +6,26 @@
     <string name="app_name">Pedometrak</string>
     <string name="goal">Goal</string>
     <string name="step_size">Step size</string>
-    <string name="about">About</string>
+    <string name="about">About Pedometrak</string>
     <string name="step_size_summary">Current step size: %1$.2f %2$s</string>
     <string name="notification">Show notification</string>
     <string name="set_step_size">Set step size</string>
     <string name="steps">steps</string>
     <string name="settings">Settings</string>
-    <string name="notification_text">%s steps to go</string>
     <string name="total">Total</string>
-    <string name="notification_title">Pedometer is counting</string>
-    <string name="your_progress_will_be_shown_here_soon">Your progress will be shown here soon</string>
     <string name="average">Average</string>
     <string name="record">Record</string>
-    <string name="total_last_7_days">Total last 7 days</string>
-    <string name="average_last_7_days">Average last 7 days</string>
-    <string name="total_this_month">Total this month</string>
     <string name="average_this_month">Average this month</string>
-    <string name="about_text_links">This app was created by Thomas Hoffmann (<a href="https://www.j4velin.de">www.j4velin.de</a>) and uses <a href="https://github.com/blackfizz/EazeGraph">EazeGraph</a> by Paul Cech and <a href="https://github.com/attenzione/android-ColorPickerPreference">ColorPickerPreference</a> by Sergey Margaritov.\n\nPedometer is open source! Get the code and the full list of contributors from <a href="https://github.com/j4velin/Pedometer">GitHub</a>.\n\n</string>
+    <string name="about_text_links">This app was created by Andy, Sarah, Zeb for SYDE372 Project.
+        This project based off of <a href="https://github.com/j4velin/Pedometer">Pedometer</a> by Thomas Hoffmann
+        and uses <a href="https://github.com/blackfizz/EazeGraph">EazeGraph</a> by Paul Cech.\n</string>
     <string name="about_app_version">App version: %s</string>
-    <string name="since">Since %s</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="close">close</string>
-    <string name="no_split_active">No split counter active. Click start to count the steps from now on</string>
-    <string name="split_count">Split count</string>
     <string name="pause">Pause</string>
-    <string name="resume">Resume</string>
-    <string name="ispaused">Pedometer is paused</string>
     <string name="pause_on_power_title">Pause while charging</string>
     <string name="pause_on_power_summary">Pause Pedometer while device is charging</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="stop_workout">Stop Workout</string>
     <string name="start_workout">Start Workout</string>
 </resources>
