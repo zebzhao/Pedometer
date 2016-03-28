@@ -76,7 +76,7 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return ((ActivityMain) getActivity()).optionsItemSelected(item);
+        return ((ActivityMain) getActivity()).handleItemSelected(item);
     }
 
     @Override

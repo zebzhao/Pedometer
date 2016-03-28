@@ -38,8 +38,6 @@ public class ActivityMain extends FragmentActivity {
     protected void onCreate(final Bundle b) {
         super.onCreate(b);
 
-        startService(new Intent(this, PedometerManager.class));
-
         if (b == null) {
             // Create new fragment and transaction
             Fragment newFragment = new FragmentOverviewController();
@@ -60,11 +58,13 @@ public class ActivityMain extends FragmentActivity {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStackImmediate();
         } else {
+            stopService(new Intent(this, PedometerManager.class));
             finish();
         }
     }
 
     public void startWorkoutFragment(View v) {
+        startService(new Intent(this, PedometerManager.class));
         getFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.content, new FragmentWorkoutViewController()).addToBackStack(null)
@@ -72,6 +72,7 @@ public class ActivityMain extends FragmentActivity {
     }
 
     public void closeWorkoutFragment(View v) {
+        stopService(new Intent(this, PedometerManager.class));
         getFragmentManager().popBackStackImmediate();
     }
 

@@ -41,16 +41,13 @@ import com.pedometrak.util.Logger;
  */
 public class PedometerManager extends Service implements SensorEventListener {
 
-    public final static String ACTION_PAUSE = "pause";
     public final static int MICROSECONDS_IN_ONE_SECOND = 1000000;
-
     public static List<Integer> steps = new ArrayList<>(10000);
+
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
-        // nobody knows what happens here: step value might magically decrease
-        // when this method is called...
-        if (BuildConfig.DEBUG) Logger.log(sensor.getName() + " accuracy changed: " + accuracy);
+        // won't be called
     }
 
     @Override
@@ -73,22 +70,6 @@ public class PedometerManager extends Service implements SensorEventListener {
     }
 
     @Override
-    public int onStartCommand(final Intent intent, int flags, int startId) {
-        if (intent == null || ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
-            stopSelf();
-            unregisterSensor();
-            return START_NOT_STICKY;
-        }
-        else {
-            if (BuildConfig.DEBUG)
-                Logger.log("onStartCommand action: " + intent.getStringExtra("action"));
-            // May be Sticky in the future
-            registerSensor();
-            return START_NOT_STICKY;
-        }
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) Logger.log("PedometerManager onCreate");
@@ -96,23 +77,12 @@ public class PedometerManager extends Service implements SensorEventListener {
     }
 
     @Override
-    public void onTaskRemoved(final Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
-        if (BuildConfig.DEBUG) Logger.log("sensor service task removed");
-        // Restart service in 500 ms
-        ((AlarmManager) getSystemService(Context.ALARM_SERVICE))
-                .set(AlarmManager.RTC, System.currentTimeMillis() + 500, PendingIntent
-                        .getService(this, 3, new Intent(this, PedometerManager.class), 0));
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         if (BuildConfig.DEBUG) Logger.log("PedometerManager onDestroy");
 
-            SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-            sm.unregisterListener(this);
-
+        unregisterSensor();
+        steps.clear();
     }
 
     private void registerSensor() {
