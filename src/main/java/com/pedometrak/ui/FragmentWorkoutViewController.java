@@ -52,8 +52,7 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
         super.onCreate(savedInstanceState);
 
         // register a sensorlistener to live update the UI if a step is taken
-        SensorManager sm =
-                (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
                 SensorManager.SENSOR_DELAY_UI, 0);
     }
@@ -78,7 +77,6 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

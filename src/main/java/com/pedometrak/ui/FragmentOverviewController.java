@@ -84,7 +84,7 @@ public class FragmentOverviewController extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return true;
+        return ((ActivityMain) getActivity()).optionsItemSelected(item);
     }
 
 }

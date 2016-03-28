@@ -61,7 +61,6 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

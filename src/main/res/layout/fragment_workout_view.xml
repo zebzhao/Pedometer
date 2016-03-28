@@ -41,6 +41,7 @@
             android:text="@string/stop_workout"
             android:id="@+id/stop" android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true" android:layout_alignParentRight="true"/>
+            android:layout_alignParentLeft="true" android:layout_alignParentRight="true"
+            android:onClick="closeWorkoutFragment"/>
 
 </RelativeLayout>
