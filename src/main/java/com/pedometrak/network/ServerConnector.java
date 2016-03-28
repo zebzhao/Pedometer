@@ -117,6 +117,42 @@ public class ServerConnector {
         }
     }
 
+    private JSONObject getRankPayload(String uuid) {
+        JSONObject payload = new JSONObject();
+        addKey(payload, "UUID", uuid);
+        return payload;
+    }
+
+    public void getRank(final JsonRequestCallback callback) {
+        final SharedPreferences prefs = mCtx.getSharedPreferences("network", Context.MODE_PRIVATE);
+        String uuid = prefs.getString("uuid", "");
+
+        if (uuid.length() == 0) {
+            register(new JsonRequestCallback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    getRank(callback);
+                }
+                @Override
+                public void onError() {
+                }
+            });
+        }
+        else {
+            sendRequest(API_HOST + URL_RANK, Request.Method.GET,
+                    getRankPayload(uuid), new JsonRequestCallback() {
+                        @Override
+                        public void onSuccess(JSONObject response) {
+                            callback.onSuccess(response);
+                        }
+                        @Override
+                        public void onError() {
+                            callback.onError();
+                        }
+                    });
+        }
+    }
+
     private JSONObject registerPayload() {
         // UUID doesn't exist, fetch it from the server
         String androidId = Settings.Secure.getString(mCtx.getContentResolver(), Settings.Secure.ANDROID_ID);
