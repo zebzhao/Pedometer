@@ -13,6 +13,8 @@
             eaze:egLegendHeight="0dp"
             eaze:egInnerPadding="75"
             eaze:egHighlightStrength="1"
+            eaze:egUsePieRotation="true"
+            eaze:egDrawValueInPie="false"
             android:layout_marginTop="15dp" android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"/>
@@ -23,9 +25,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="45sp"
-            android:text="10"
             android:layout_alignTop="@+id/graph" android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@+id/graph"/>
+            android:layout_alignBottom="@+id/graph" android:text="0"/>
 
     <TextView
             android:id="@+id/unit"

@@ -38,22 +38,64 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
     }
 
     /**
-     * Query the 'metrics'. Extract steps columns.
+     * Get average of all session lengths in database.
      *
-     * @param selection     the selection
-     * @param selectionArgs the selection arguments
-     * @param groupBy       the group by statement
-     * @param having        the having statement
-     * @param orderBy       the order by statement
      * @return number of steps from the query
      */
-    public int querySteps(final String selection, final String[] selectionArgs, final String groupBy, final String having, final String orderBy, final String limit) {
-        Cursor c = getReadableDatabase().query(
-                DB_NAME, new String[] {"steps"}, selection, selectionArgs, groupBy, having, orderBy, limit);
+    public int queryAverageSessionTime() {
+        Cursor c = getReadableDatabase().rawQuery("SELECT ((SUM(start)-SUM(end))/COUNT(*)) FROM metrics", null);
+
+        int result = -1;
+        if (c.moveToFirst()) {
+            result = c.getInt(0);
+        }
+        c.close();
+        return result;
+    }
+
+    /**
+     * Get sum of all steps in database.
+     *
+     * @return number of steps from the query
+     */
+    public int queryAverageCalories() {
+        Cursor c = getReadableDatabase().rawQuery("SELECT AVG(calories) FROM metrics", null);
+
+        int result = -1;
+        if (c.moveToFirst()) {
+            result = c.getInt(0);
+        }
+        c.close();
+        return result;
+    }
+
+    /**
+     * Get sum of all steps in database.
+     *
+     * @return number of steps from the query
+     */
+    public int queryTotalSteps() {
+        Cursor c = getReadableDatabase().rawQuery("SELECT SUM(steps) FROM metrics", null);
 
         int result = -1;
         if (c.moveToFirst()) {
              result = c.getInt(0);
+        }
+        c.close();
+        return result;
+    }
+
+    /**
+     * Get sum of all distances in database.
+     *
+     * @return number of steps from the query
+     */
+    public int queryTotalDistance() {
+        Cursor c = getReadableDatabase().rawQuery("SELECT SUM(distance) FROM metrics", null);
+
+        int result = -1;
+        if (c.moveToFirst()) {
+            result = c.getInt(0);
         }
         c.close();
         return result;
@@ -93,6 +135,7 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
             values.put("steps", steps);
             values.put("distance", distance);
             values.put("calories", calories);
+            values.put("sync", false);
 
             getWritableDatabase().insert(DB_NAME, null, values);
             getWritableDatabase().setTransactionSuccessful();

@@ -1,4 +1,6 @@
-package com.pedometrak;
+package com.pedometrak.util;
+
+import com.pedometrak.PedometerManager;
 
 public class MetricCalculator {
 

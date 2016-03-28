@@ -18,7 +18,7 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import com.pedometrak.BuildConfig;
 import com.pedometrak.LocalDatabaseManager;
-import com.pedometrak.MetricCalculator;
+import com.pedometrak.util.MetricCalculator;
 import com.pedometrak.R;
 import com.pedometrak.util.Logger;
 import org.eazegraph.lib.charts.BarChart;
@@ -64,8 +64,7 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
         mTextView = (TextView) getActivity().findViewById(R.id.stats);
         mChronometer = (Chronometer) getActivity().findViewById(R.id.chronometer);
 
-        final SharedPreferences prefs =
-                getActivity().getSharedPreferences("pedometrak", Context.MODE_MULTI_PROCESS);
+        final SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         float value = prefs.getFloat("stepsize_value", FragmentSettings.DEFAULT_STEP_SIZE);
         String unit = prefs.getString("stepsize_unit", FragmentSettings.DEFAULT_STEP_UNIT);

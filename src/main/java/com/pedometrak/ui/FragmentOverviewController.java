@@ -37,10 +37,9 @@ import com.pedometrak.R;
 
 public class FragmentOverviewController extends Fragment {
 
-    private TextView stepsView;
+    private TextView mTextView;
 
-    private PieModel sliceGoal, sliceCurrent;
-    private PieChart pg;
+    private PieChart mPie;
 
     public final static NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
     private boolean showSteps = true;
@@ -54,26 +53,16 @@ public class FragmentOverviewController extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_overview, null);
-        stepsView = (TextView) v.findViewById(R.id.steps);
 
-        pg = (PieChart) v.findViewById(R.id.graph);
+        mTextView = (TextView) v.findViewById(R.id.steps);
+        mPie = (PieChart) v.findViewById(R.id.graph);
 
-        // slice for the steps taken today
-        sliceCurrent = new PieModel("", 0, Color.parseColor("#99CC00"));
-        pg.addPieSlice(sliceCurrent);
-
-        // slice for the "missing" steps until reaching the goal
-        sliceGoal = new PieModel("", 10000, Color.parseColor("#CC0000"));
-        pg.addPieSlice(sliceGoal);
-
-        pg.setOnClickListener(new OnClickListener() {
+        mPie.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
                 showSteps = !showSteps;
             }
         });
-
-        pg.startAnimation();
         return v;
     }
 
@@ -87,4 +76,20 @@ public class FragmentOverviewController extends Fragment {
         return ((ActivityMain) getActivity()).handleItemSelected(item);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePie();
+    }
+
+    private void updatePie() {
+        // slice for the steps taken today
+        PieModel sliceCurrent = new PieModel("", 0, Color.parseColor("#99CC00"));
+        mPie.addPieSlice(sliceCurrent);
+
+        // slice for the "missing" steps until reaching the goal
+        PieModel sliceGoal = new PieModel("", 10000, Color.parseColor("#CC0000"));
+        mPie.addPieSlice(sliceGoal);
+        mPie.startAnimation();
+    }
 }

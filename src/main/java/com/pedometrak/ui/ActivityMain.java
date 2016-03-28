@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.pedometrak.LocalDatabaseManager;
 import com.pedometrak.PedometerManager;
 import com.pedometrak.R;
 
@@ -76,7 +77,6 @@ public class ActivityMain extends FragmentActivity {
         getFragmentManager().popBackStackImmediate();
     }
 
-
     public boolean handleItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -116,5 +116,12 @@ public class ActivityMain extends FragmentActivity {
                 break;
         }
         return true;
+    }
+
+    /**
+     * Commits session data to the local database and send it to the server.
+     */
+    private void saveUnsynchedSessions() {
+        LocalDatabaseManager.getInstance(this).insertRecord(0, 0, 0, 0, 0);
     }
 }

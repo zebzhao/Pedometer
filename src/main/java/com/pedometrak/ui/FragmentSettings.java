@@ -46,8 +46,7 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
 
         addPreferencesFromResource(R.xml.settings);
 
-        final SharedPreferences prefs =
-                getActivity().getSharedPreferences("pedometrak", Context.MODE_MULTI_PROCESS);
+        final SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         Preference stepsize = findPreference("stepsize");
         stepsize.setOnPreferenceClickListener(this);
@@ -83,8 +82,8 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
     public boolean onPreferenceClick(final Preference preference) {
         AlertDialog.Builder builder;
         View v;
-        final SharedPreferences prefs =
-                getActivity().getSharedPreferences("pedometrak", Context.MODE_MULTI_PROCESS);
+
+        final SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         switch (preference.getTitleRes()) {
             case R.string.step_size:
