@@ -1,9 +1,9 @@
 package com.pedometrak.data;
 
 public class SessionData {
-    public int start;
-    public int end;
-    public int steps;
-    public float calories;
-    public float distance;
+    public long start = 0;
+    public long end = 0;
+    public int steps = 0;
+    public float calories = 0;
+    public float distance = 0;
 }

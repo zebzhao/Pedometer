@@ -5,11 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.pedometrak.data.SessionData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocalDatabaseManager extends SQLiteOpenHelper {
 
     private final static String DB_NAME = "metrics";
-    private final static int DB_VERSION = 3;
+    private final static int DB_VERSION = 2;
 
     private static LocalDatabaseManager instance;
 
@@ -26,14 +30,14 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + DB_NAME + " (start INTEGER, end INTEGER, steps INTEGER, distance REAL, calories REAL)");
+        db.execSQL("CREATE TABLE " + DB_NAME + " (start INTEGER, end INTEGER, steps INTEGER, distance REAL, calories REAL, sync INTEGER)");
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             db.execSQL("DROP TABLE " + DB_NAME);
-            db.execSQL("CREATE TABLE " + DB_NAME + " (start INTEGER, end INTEGER, steps INTEGER, distance REAL, calories REAL)");
+            db.execSQL("CREATE TABLE " + DB_NAME + " (start INTEGER, end INTEGER, steps INTEGER, distance REAL, calories REAL, sync INTEGER)");
         }
     }
 
@@ -125,7 +129,7 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
      * @param distance the distance travelled in session
      * @param calories the number of calories burned
      */
-    public void insertRecord(long start, long end, int steps, float distance, float calories) {
+    public void insertSession(long start, long end, int steps, float distance, float calories) {
         getWritableDatabase().beginTransaction();
         try {
             ContentValues values = new ContentValues();
@@ -135,12 +139,35 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
             values.put("steps", steps);
             values.put("distance", distance);
             values.put("calories", calories);
-            values.put("sync", false);
+            values.put("sync", 0);
 
             getWritableDatabase().insert(DB_NAME, null, values);
             getWritableDatabase().setTransactionSuccessful();
         } finally {
             getWritableDatabase().endTransaction();
         }
+    }
+
+    public List<SessionData> getUnsynchedSessions() {
+        List<SessionData> data = new ArrayList<>(100);
+        Cursor c = getReadableDatabase().rawQuery("select * from metrics", null);
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                int sync = c.getInt(5);
+                if (sync == 0) {
+                    SessionData row = new SessionData();
+                    row.start = c.getLong(0);
+                    row.end = c.getLong(1);
+                    row.steps = c.getInt(2);
+                    row.distance = c.getFloat(3);
+                    row.calories = c.getFloat(4);
+                    data.add(row);
+                }
+                c.moveToNext();
+            }
+        }
+        c.close();
+        return data;
     }
 }

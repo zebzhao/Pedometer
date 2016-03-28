@@ -32,8 +32,11 @@ import android.widget.TextView;
 import com.pedometrak.LocalDatabaseManager;
 import com.pedometrak.PedometerManager;
 import com.pedometrak.R;
+import com.pedometrak.data.SessionData;
 
 public class ActivityMain extends FragmentActivity {
+
+    private SessionData mSession;
 
     @Override
     protected void onCreate(final Bundle b) {
@@ -64,15 +67,20 @@ public class ActivityMain extends FragmentActivity {
         }
     }
 
-    public void startWorkoutFragment(View v) {
+    public void openWorkoutFragment(View v) {
         startService(new Intent(this, PedometerManager.class));
         getFragmentManager()
                 .beginTransaction()
-                .replace(android.R.id.content, new FragmentWorkoutViewController()).addToBackStack(null)
+                .replace(android.R.id.content, new FragmentWorkoutViewController(), "WORKOUT_FRAGMENT").addToBackStack(null)
                 .commit();
     }
 
     public void closeWorkoutFragment(View v) {
+        // Save the current session
+        saveSession(mSession);
+        // Remove the session data
+        mSession = null;
+
         stopService(new Intent(this, PedometerManager.class));
         getFragmentManager().popBackStackImmediate();
     }
@@ -118,10 +126,27 @@ public class ActivityMain extends FragmentActivity {
         return true;
     }
 
+    public void newSession() {
+        // Create a new session
+        mSession = new SessionData();
+        mSession.start = System.currentTimeMillis();
+        mSession.end = System.currentTimeMillis();
+    }
+
+    public SessionData getSession() {
+        return mSession;
+    }
+
+    private void saveSession(SessionData session) {
+        LocalDatabaseManager.getInstance(this).insertSession(
+                session.start, session.end, session.steps, session.distance, session.calories);
+        // Upload unsynced sessions to the server
+        saveUnsynchedSessions();
+    }
+
     /**
      * Commits session data to the local database and send it to the server.
      */
     private void saveUnsynchedSessions() {
-        LocalDatabaseManager.getInstance(this).insertRecord(0, 0, 0, 0, 0);
     }
 }

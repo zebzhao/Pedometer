@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import com.pedometrak.BuildConfig;
-import com.pedometrak.LocalDatabaseManager;
+import com.pedometrak.data.SessionData;
 import com.pedometrak.util.MetricCalculator;
 import com.pedometrak.R;
 import com.pedometrak.util.Logger;
@@ -64,6 +64,9 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
         mTextView = (TextView) getActivity().findViewById(R.id.stats);
         mChronometer = (Chronometer) getActivity().findViewById(R.id.chronometer);
 
+        // Create a new session
+        ((ActivityMain) getActivity()).newSession();
+
         final SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         float value = prefs.getFloat("stepsize_value", FragmentSettings.DEFAULT_STEP_SIZE);
@@ -95,6 +98,11 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
                 "Distance Travelled: " + NumberFormat.getInstance().format(dist) + " m\n" +
                 "Calories Burned: " + NumberFormat.getInstance().format(cal) + " cal");
 
+        SessionData session = ((ActivityMain) getActivity()).getSession();
+        session.calories = cal;
+        session.distance = dist;
+        session.end = System.currentTimeMillis();
+
         updateBars(step, dist, cal);
     }
 
@@ -104,6 +112,8 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
         // Register a sensor listener to update the UI if a step is taken
         SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER), SensorManager.SENSOR_DELAY_UI, 0);
+
+        // Update view
     }
 
     @Override
@@ -118,11 +128,9 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
             if (BuildConfig.DEBUG) Logger.log(e);
             e.printStackTrace();
         }
-
-        LocalDatabaseManager db = LocalDatabaseManager.getInstance(getActivity());
-        // TODO: Save current data
-        db.close();
     }
+
+
 
     /**
      * Updates the bar graph..

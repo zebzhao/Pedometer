@@ -41,7 +41,6 @@ public class FragmentOverviewController extends Fragment {
 
     private PieChart mPie;
 
-    public final static NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
     private boolean showSteps = true;
 
     @Override
