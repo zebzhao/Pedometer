@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package pedometrak;
+package com.pedometrak;
 
-import pedometrak.util.Logger;
+import com.pedometrak.util.Logger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

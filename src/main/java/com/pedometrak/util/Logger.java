@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pedometrak.util;
+package com.pedometrak.util;
 
 import android.os.Environment;
 
@@ -23,13 +23,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
-import pedometrak.BuildConfig;
+import com.pedometrak.BuildConfig;
 
 public abstract class Logger {
 
     private static FileWriter fw;
     private static final Date date = new Date();
-    private final static String APP = "Pedometer";
+    private final static String APP = "Pedometrak";
 
     public static void log(Throwable ex) {
         log(ex.getMessage());

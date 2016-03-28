@@ -1,4 +1,4 @@
-package pedometrak;
+package com.pedometrak;
 
 public class MetricCalculator {
     public static float calculateDistance() {

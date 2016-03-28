@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pedometrak;
+package com.pedometrak;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -30,7 +30,7 @@ import android.os.IBinder;
 import java.util.ArrayList;
 import java.util.List;
 
-import pedometrak.util.Logger;
+import com.pedometrak.util.Logger;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get

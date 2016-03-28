@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pedometrak.ui;
+package com.pedometrak.ui;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -28,8 +28,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import pedometrak.PedometerManager;
-import pedometrak.R;
+import com.pedometrak.PedometerManager;
+import com.pedometrak.R;
 
 public class ActivityMain extends FragmentActivity {
 

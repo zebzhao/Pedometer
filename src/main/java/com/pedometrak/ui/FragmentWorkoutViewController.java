@@ -1,4 +1,4 @@
-package pedometrak.ui;
+package com.pedometrak.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import pedometrak.DatabaseManager;
-import pedometrak.R;
+import com.pedometrak.DatabaseManager;
+import com.pedometrak.R;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -33,7 +33,7 @@ android {
         buildToolsVersion "23.0.1"
     }
     defaultConfig {
-        applicationId "pedometer"
+        applicationId "com.pedometrak"
     }
     productFlavors {
 //        play
@@ -62,7 +62,8 @@ repositories {
 
 dependencies {
     compile 'com.github.j4velin.colorpicker:colorpicker:1.2.0'
-    compile 'com.github.j4velin.EazeGraph:EazeGraph:1.0.2'
+    compile 'com.github.blackfizz:eazegraph:1.2.2@aar'
+    compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'com.android.volley:volley:1.0.0'
     //    playCompile 'com.google.android.gms:play-services-fitness:+'

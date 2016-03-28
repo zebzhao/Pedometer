@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pedometrak.ui;
+package com.pedometrak.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,7 +33,7 @@ import android.widget.RadioGroup;
 
 import java.util.Locale;
 
-import pedometrak.R;
+import com.pedometrak.R;
 
 public class FragmentSettings extends PreferenceFragment implements OnPreferenceClickListener {
 
@@ -47,7 +47,7 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
         addPreferencesFromResource(R.xml.settings);
 
         final SharedPreferences prefs =
-                getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
+                getActivity().getSharedPreferences("pedometrak", Context.MODE_MULTI_PROCESS);
 
         Preference stepsize = findPreference("stepsize");
         stepsize.setOnPreferenceClickListener(this);
@@ -85,7 +85,7 @@ public class FragmentSettings extends PreferenceFragment implements OnPreference
         AlertDialog.Builder builder;
         View v;
         final SharedPreferences prefs =
-                getActivity().getSharedPreferences("pedometer", Context.MODE_MULTI_PROCESS);
+                getActivity().getSharedPreferences("pedometrak", Context.MODE_MULTI_PROCESS);
 
         switch (preference.getTitleRes()) {
             case R.string.step_size:

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pedometrak.ui;
+package com.pedometrak.ui;
 
 import android.app.Fragment;
 import android.graphics.Color;
@@ -33,7 +33,7 @@ import org.eazegraph.lib.models.PieModel;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import pedometrak.R;
+import com.pedometrak.R;
 
 public class FragmentOverviewController extends Fragment {
 
@@ -73,8 +73,6 @@ public class FragmentOverviewController extends Fragment {
             }
         });
 
-        pg.setDrawValueInPie(false);
-        pg.setUsePieRotation(true);
         pg.startAnimation();
         return v;
     }
@@ -86,7 +84,7 @@ public class FragmentOverviewController extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return ((ActivityMain) getActivity()).optionsItemSelected(item);
+        return true;
     }
 
 }

@@ -24,16 +24,15 @@
             android:layout_alignParentRight="true" android:gravity="center_horizontal"/>
 
     <org.eazegraph.lib.charts.ValueLineChart
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:eaze="http://schemas.android.com/apk/res-auto"
             android:id="@+id/linegraph"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            app:egUseCubic="true"
-            app:egUseOverlapFill="true"
-            app:egCurveSmoothness="0.4"
-            app:egIndicatorLineColor="#FE6DA8"
-            app:egLegendHeight="40dp"
-            app:egShowStandardValue="true" android:layout_above="@+id/stop" android:layout_marginRight="5dp"
+            eaze:egUseCubic="true"
+            eaze:egUseOverlapFill="true"
+            eaze:egCurveSmoothness="0.4"
+            eaze:egLegendHeight="40dp"
+            android:layout_above="@+id/stop" android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"/>
 
     <Button

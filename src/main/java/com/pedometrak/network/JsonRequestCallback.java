@@ -1,4 +1,4 @@
-package pedometrak.network;
+package com.pedometrak.network;
 
 import org.json.JSONObject;
 
