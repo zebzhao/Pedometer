@@ -27,6 +27,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pedometrak.network.JsonRequestCallback;
+import com.pedometrak.network.ServerConnector;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
@@ -34,6 +36,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.pedometrak.R;
+import org.json.JSONObject;
 
 public class FragmentOverviewController extends Fragment {
 
@@ -83,12 +86,21 @@ public class FragmentOverviewController extends Fragment {
 
     private void updatePie() {
         // slice for the steps taken today
-        PieModel sliceCurrent = new PieModel("", 0, Color.parseColor("#99CC00"));
-        mPie.addPieSlice(sliceCurrent);
-
-        // slice for the "missing" steps until reaching the goal
-        PieModel sliceGoal = new PieModel("", 10000, Color.parseColor("#CC0000"));
+        PieModel sliceGoal = new PieModel("", 100, Color.parseColor("#CC0000"));
         mPie.addPieSlice(sliceGoal);
         mPie.startAnimation();
+
+        ServerConnector.getInstance(getActivity()).getRank(new JsonRequestCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                PieModel sliceCurrent = new PieModel("", (float) response.optDouble("stepsTaken")*100, Color.parseColor("#99CC00"));
+                mPie.addPieSlice(sliceCurrent);
+                mTextView.setText(((float) response.optDouble("stepsTaken")*100) + "%");
+            }
+            @Override
+            public void onError() {
+            }
+        });
+
     }
 }

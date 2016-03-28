@@ -32,7 +32,7 @@
             android:id="@+id/unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="steps"
+            android:text="@string/global_rank"
             android:textSize="20sp"
             android:layout_alignStart="@+id/steps" android:layout_alignEnd="@+id/steps" android:gravity="center"
             android:layout_alignTop="@+id/steps" android:layout_alignBottom="@+id/steps"
