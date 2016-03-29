@@ -27,9 +27,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pedometrak.LocalDatabaseManager;
 import com.pedometrak.network.JsonRequestCallback;
 import com.pedometrak.network.ServerConnector;
+import com.pedometrak.util.Logger;
+import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
 
 import java.text.NumberFormat;
@@ -41,8 +45,8 @@ import org.json.JSONObject;
 public class FragmentOverviewController extends Fragment {
 
     private TextView mTextView;
-
     private PieChart mPie;
+    private BarChart mBarChart;
 
     private boolean showSteps = true;
 
@@ -57,6 +61,7 @@ public class FragmentOverviewController extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_overview, null);
 
         mTextView = (TextView) v.findViewById(R.id.steps);
+        mBarChart = (BarChart) v.findViewById(R.id.bargraph);
         mPie = (PieChart) v.findViewById(R.id.graph);
 
         mPie.setOnClickListener(new OnClickListener() {
@@ -82,6 +87,7 @@ public class FragmentOverviewController extends Fragment {
     public void onResume() {
         super.onResume();
         updatePie();
+        updateBars();
     }
 
     private void updatePie() {
@@ -101,6 +107,33 @@ public class FragmentOverviewController extends Fragment {
             public void onError() {
             }
         });
+    }
 
+    /**
+     * Updates the bar graph..
+     */
+    private void updateBars() {
+        LocalDatabaseManager db = LocalDatabaseManager.getInstance(getActivity());
+
+        float totalDistance = db.queryTotalDistance();
+        float totalSteps = db.queryTotalSteps();
+        String distanceUnits = " (m)";
+        String stepsUnits = "";
+
+        if (totalDistance > 1000) {
+            distanceUnits = " (km)";
+            totalDistance /= 1000;
+        }
+
+        if (totalSteps > 1000) {
+            stepsUnits = " (1000s)";
+            totalSteps /= 1000;
+        }
+
+        mBarChart.clearChart();
+        mBarChart.addBar(new BarModel("Average Calories", db.queryAverageCalories(), Color.parseColor("#99CC00")));
+        mBarChart.addBar(new BarModel("Total Steps" + stepsUnits, totalSteps, Color.parseColor("#99CC00")));
+        mBarChart.addBar(new BarModel("Total Distance" + distanceUnits, totalDistance, Color.parseColor("#99CC00")));
+        mBarChart.startAnimation();
     }
 }

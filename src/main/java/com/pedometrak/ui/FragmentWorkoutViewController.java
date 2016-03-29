@@ -101,6 +101,7 @@ public class FragmentWorkoutViewController extends Fragment implements SensorEve
         SessionData session = ((ActivityMain) getActivity()).getSession();
         session.calories = cal;
         session.distance = dist;
+        session.steps = step;
         session.end = System.currentTimeMillis();
 
         updateBars(step, dist, cal);
