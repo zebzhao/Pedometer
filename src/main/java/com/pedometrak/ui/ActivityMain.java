@@ -61,6 +61,8 @@ public class ActivityMain extends FragmentActivity {
             // Commit the transaction
             transaction.commit();
         }
+
+        Logger.log("Unsaved sessions: " + LocalDatabaseManager.getInstance(this).getUnsynchedSessions().size());
     }
 
     @Override
@@ -154,15 +156,15 @@ public class ActivityMain extends FragmentActivity {
      * Commits session data to the local database and send it to the server.
      */
     private void saveUnsynchedSessions() {
-        final LocalDatabaseManager db =LocalDatabaseManager.getInstance(this);
+        final LocalDatabaseManager db = LocalDatabaseManager.getInstance(this);
         List<SessionData> data = db.getUnsynchedSessions();
         for (final SessionData session : data) {
             ServerConnector.getInstance(this).sendSession(
                     session.start, session.end, session.steps, session.distance, session.calories, new JsonRequestCallback() {
                         @Override
                         public void onSuccess(JSONObject response) {
-                            int rowsAffected = db.setSyncFlag(session.start);
-                            Logger.log(rowsAffected + " rows affected by sync update!");
+                            db.setSyncFlag(session.start);
+                            Logger.log(session.start + " session saved!");
                         }
                         @Override
                         public void onError() {

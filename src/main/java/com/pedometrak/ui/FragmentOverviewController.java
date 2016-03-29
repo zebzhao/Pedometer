@@ -91,17 +91,16 @@ public class FragmentOverviewController extends Fragment {
     }
 
     private void updatePie() {
-        // slice for the steps taken today
-        PieModel sliceGoal = new PieModel("", 100, Color.parseColor("#CC0000"));
-        mPie.addPieSlice(sliceGoal);
-        mPie.startAnimation();
-
         ServerConnector.getInstance(getActivity()).getRank(new JsonRequestCallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                PieModel sliceCurrent = new PieModel("", (float) response.optDouble("totalStepsTaken")*100, Color.parseColor("#99CC00"));
+                float percentile = (float) response.optDouble("totalStepsTaken");
+                PieModel sliceGoal = new PieModel("", 100-percentile, Color.parseColor("#CC0000"));
+                mPie.addPieSlice(sliceGoal);
+                PieModel sliceCurrent = new PieModel("", percentile, Color.parseColor("#99CC00"));
                 mPie.addPieSlice(sliceCurrent);
-                mTextView.setText(((float) response.optDouble("totalStepsTaken")*100) + "%");
+                mTextView.setText(percentile + "%");
+                mPie.startAnimation();
             }
             @Override
             public void onError() {

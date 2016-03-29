@@ -107,20 +107,12 @@ public class LocalDatabaseManager extends SQLiteOpenHelper {
     }
 
     /**
-     * Set the sync column to true
-     *
-     * @return 1 is success
+     * Set the sync column to true.
      */
-    public int setSyncFlag(long startTime) {
+    public void setSyncFlag(long startTime) {
         Cursor c = getReadableDatabase().rawQuery(
                 "UPDATE metrics SET sync=1 WHERE start=" + Objects.toString(startTime, "0"), null);
-
-        int result = 0;
-        if (c.moveToFirst()) {
-            result = c.getInt(0);
-        }
         c.close();
-        return result;
     }
 
     /**

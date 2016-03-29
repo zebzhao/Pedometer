@@ -24,8 +24,6 @@
     <string name="stop">Stop</string>
     <string name="close">close</string>
     <string name="pause">Pause</string>
-    <string name="pause_on_power_title">Pause while charging</string>
-    <string name="pause_on_power_summary">Pause Pedometer while device is charging</string>
     <string name="stop_workout">Stop Workout</string>
     <string name="start_workout">Start Workout</string>
     <string name="global_rank">Global Rank</string>

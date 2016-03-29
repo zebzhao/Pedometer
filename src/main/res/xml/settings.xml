@@ -5,10 +5,4 @@
         android:key="stepsize"
         android:title="@string/step_size"/>
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="pause_on_power"
-        android:title="@string/pause_on_power_title"
-        android:summary="@string/pause_on_power_summary"/>
-
 </PreferenceScreen>
