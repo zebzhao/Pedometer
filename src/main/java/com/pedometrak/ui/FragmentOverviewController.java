@@ -99,9 +99,9 @@ public class FragmentOverviewController extends Fragment {
         ServerConnector.getInstance(getActivity()).getRank(new JsonRequestCallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                PieModel sliceCurrent = new PieModel("", (float) response.optDouble("stepsTaken")*100, Color.parseColor("#99CC00"));
+                PieModel sliceCurrent = new PieModel("", (float) response.optDouble("totalStepsTaken")*100, Color.parseColor("#99CC00"));
                 mPie.addPieSlice(sliceCurrent);
-                mTextView.setText(((float) response.optDouble("stepsTaken")*100) + "%");
+                mTextView.setText(((float) response.optDouble("totalStepsTaken")*100) + "%");
             }
             @Override
             public void onError() {

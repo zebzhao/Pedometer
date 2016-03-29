@@ -3,10 +3,7 @@ package com.pedometrak.network;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
@@ -17,7 +14,7 @@ import org.json.JSONObject;
 public class ServerConnector {
     private static ServerConnector mInstance;
 
-    public static final String API_HOST = "http://pedometrak.adhockish.com/api";
+    public static final String API_HOST = "http://pedometrak.adhocish.com/api";
     public static final String URL_REGISTER ="/register";
     public static final String URL_SESSION ="/session";
     public static final String URL_RANK ="/rank";
@@ -29,6 +26,7 @@ public class ServerConnector {
     public static synchronized ServerConnector getInstance(Context context) {
         if (mInstance == null) {
             mInstance = new ServerConnector(context);
+            VolleyLog.v("TAG", "Message");
         }
         return mInstance;
     }
@@ -55,12 +53,7 @@ public class ServerConnector {
                     @Override
                     public void onResponse(JSONObject response) {
                         // the response is already constructed as a JSONObject!
-                        try {
-                            response = response.getJSONObject("args");
-                            callback.onSuccess(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        callback.onSuccess(response);
                     }
                 }, new Response.ErrorListener() {
 
@@ -139,7 +132,7 @@ public class ServerConnector {
             });
         }
         else {
-            sendRequest(API_HOST + URL_RANK, Request.Method.GET,
+            sendRequest(API_HOST + URL_RANK, Request.Method.POST,
                     getRankPayload(uuid), new JsonRequestCallback() {
                         @Override
                         public void onSuccess(JSONObject response) {
@@ -172,7 +165,7 @@ public class ServerConnector {
             sendRequest(API_HOST + URL_REGISTER, Request.Method.POST, registerPayload(), new JsonRequestCallback() {
                 @Override
                 public void onSuccess(JSONObject response) {
-                    prefs.edit().putString("uuid", response.optString("UUID", "")).commit();
+                    prefs.edit().putString("uuid", response.optString("result", "")).commit();
                     callback.onSuccess(response);
                 }
 
